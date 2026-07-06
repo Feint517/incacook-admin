@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "admin: next dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "admin: next dev (→ prod API)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "NEXT_PUBLIC_API_BASE_URL=https://incacook-api-production.up.railway.app pnpm dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "e2e: playwright (headed)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm e2e:headed",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

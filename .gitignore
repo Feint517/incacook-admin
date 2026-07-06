@@ -6,3 +6,14 @@ node_modules
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Env files (local secrets / per-machine config)
+.env
+.env.local
+.env.*.local
+
+# Playwright
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
