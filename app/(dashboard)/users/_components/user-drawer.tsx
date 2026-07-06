@@ -20,17 +20,25 @@ import {
   UserStatus,
   type AdminUser,
 } from "./user-model";
+import { UserSanctions } from "./user-sanctions";
 
 interface Props {
   /** The row clicked in the list, or `null` when the drawer is closed. */
   user: AdminUser | null;
   onClose: () => void;
+  /** Refetch the parent users list after a sanction changes the row status. */
+  onChanged?: () => void;
 }
 
-export function UserDrawer({ user, onClose }: Props) {
+export function UserDrawer({ user, onClose, onChanged }: Props) {
   // Always call the hook (rules of hooks); it stays idle until a row is opened.
   // We re-fetch the full record by id so the drawer reflects the latest state.
-  const { data: detail, isLoading, isError } = useAdminQuery<AdminUser>({
+  const {
+    data: detail,
+    isLoading,
+    isError,
+    refetch,
+  } = useAdminQuery<AdminUser>({
     path: user ? `/admin/users/${user.id}` : "/admin/users/__none__",
     enabled: !!user,
     searchDebounceMs: 0,
@@ -124,6 +132,14 @@ export function UserDrawer({ user, onClose }: Props) {
               </div>
             </>
           )}
+
+          <UserSanctions
+            user={u}
+            onMutated={() => {
+              refetch();
+              onChanged?.();
+            }}
+          />
 
           {isLoading && (
             <p className="text-center text-[11px] text-on-surface-variant">

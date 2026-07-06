@@ -165,7 +165,11 @@ export function UsersClient() {
         }}
       />
 
-      <UserDrawer user={active} onClose={() => setActive(null)} />
+      <UserDrawer
+        user={active}
+        onClose={() => setActive(null)}
+        onChanged={refetch}
+      />
     </>
   );
 }
