@@ -10,3 +10,7 @@ export {
   type UseAdminQueryOptions,
   type UseAdminQueryResult,
 } from "./use-admin-query";
+export {
+  useAdminMutation,
+  type UseAdminMutationResult,
+} from "./use-admin-mutation";

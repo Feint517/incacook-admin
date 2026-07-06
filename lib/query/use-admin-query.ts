@@ -20,7 +20,8 @@
  */
 
 import * as React from "react";
-import { get, ApiError, type Pagination } from "@/lib/api";
+import { get, ApiError, type Pagination, type RequestOptions } from "@/lib/api";
+import { authRequest } from "@/lib/auth";
 
 /** Server-side list query params, forwarded verbatim as URL query params. */
 export interface AdminQueryParams {
@@ -46,14 +47,16 @@ export interface UseAdminQueryOptions {
   /** When `false`, the hook holds off fetching (e.g. before auth is ready). */
   enabled?: boolean;
 
-  // --- Auth seam (TASK-002) --------------------------------------------------
-  // This hook stays decoupled from `lib/auth`. Page-wiring tasks inject the
-  // admin token here, either eagerly via `token` or lazily via `getToken`; both
-  // are forwarded straight to the API client's request options. Defaults to no
-  // token (anonymous request).
-  /** Ready bearer token to attach. */
+  // --- Auth ------------------------------------------------------------------
+  // By default (neither `token` nor `getToken` given) the hook routes through
+  // the `lib/auth` session: it attaches the admin bearer and inherits the
+  // single-flight 401 → refresh → replay. All admin endpoints require auth, so
+  // this is the correct default and pages don't wire tokens themselves.
+  // Pass `token`/`getToken` only to override with a caller-managed bearer
+  // (that path does NOT auto-refresh).
+  /** Explicit bearer override (bypasses session auto-refresh). */
   token?: string | null;
-  /** Lazy bearer resolver, used when `token` is not provided. */
+  /** Lazy bearer override, used when `token` is not provided. */
   getToken?: () => string | null | undefined;
 }
 
@@ -142,19 +145,31 @@ export function useAdminQuery<TData = unknown>(
     const controller = new AbortController();
     setState((s) => ({ ...s, isLoading: true, isError: false, error: null }));
 
-    get<TData>(path, {
-      query: {
-        page,
-        limit,
-        offset,
-        // Skip an empty search so we don't send `?search=`.
-        search: debouncedSearch ? debouncedSearch : undefined,
-        ...extraRef.current,
-      },
-      signal: controller.signal,
-      token,
-      getToken: getTokenRef.current,
-    })
+    const runGet = (authOpts: RequestOptions = {}) =>
+      get<TData>(path, {
+        query: {
+          page,
+          limit,
+          offset,
+          // Skip an empty search so we don't send `?search=`.
+          search: debouncedSearch ? debouncedSearch : undefined,
+          ...extraRef.current,
+        },
+        signal: controller.signal,
+        ...authOpts,
+      });
+
+    // Default read path routes through the auth layer so every admin list
+    // inherits the bearer AND the single-flight 401 → refresh → replay. An
+    // explicit `token`/`getToken` override is caller-managed (no auto-refresh).
+    const request =
+      token != null
+        ? runGet({ token })
+        : getTokenRef.current
+          ? runGet({ getToken: getTokenRef.current })
+          : authRequest<TData>((opts) => runGet(opts));
+
+    request
       .then((res) => {
         if (controller.signal.aborted) return;
         setState({
@@ -190,7 +205,6 @@ export function useAdminQuery<TData = unknown>(
 
     return () => controller.abort();
     // `token` is included so the fetch re-runs once auth injects a token.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     path,
     page,

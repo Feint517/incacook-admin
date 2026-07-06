@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "board": "node scripts/agent-board.mjs list",
     "board:next": "node scripts/agent-board.mjs next"
