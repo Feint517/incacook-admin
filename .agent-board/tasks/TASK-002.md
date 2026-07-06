@@ -1,6 +1,6 @@
 # TASK-002 — Admin authentication, session, and route guard
 
-Status: In Progress
+Status: Done
 Priority: P0
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend

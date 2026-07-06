@@ -25,7 +25,7 @@
     {
       "id": "TASK-002",
       "title": "Admin authentication, session, and route guard",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P0",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-002.md",
@@ -36,7 +36,7 @@
     {
       "id": "TASK-003",
       "title": "Shared data-table query infra (pagination, filters, states)",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P1",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-003.md",

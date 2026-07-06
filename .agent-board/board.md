@@ -19,8 +19,8 @@ Updated: 2026-07-06
 | Task | Title | Status | Owner | Priority |
 | --- | --- | --- | --- | --- |
 | TASK-001 | API client, response envelope, and error codes | Done | Agent | P0 |
-| TASK-002 | Admin authentication, session, and route guard | In Progress | Agent | P0 |
-| TASK-003 | Shared data-table query infra (pagination, filters, states) | In Progress | Agent | P1 |
+| TASK-002 | Admin authentication, session, and route guard | Done | Agent | P0 |
+| TASK-003 | Shared data-table query infra (pagination, filters, states) | Done | Agent | P1 |
 | TASK-004 | Dashboard overview → /v1/admin/dashboard/* | Backlog | Agent | P0 |
 | TASK-005 | Users list + detail → /v1/admin/users | Backlog | Agent | P0 |
 | TASK-006 | User moderation — strikes + suspend/unsuspend | Backlog | Agent | P1 |
