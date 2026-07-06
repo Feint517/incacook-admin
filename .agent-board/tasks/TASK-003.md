@@ -1,6 +1,6 @@
 # TASK-003 — Shared data-table query infra (pagination, filters, states)
 
-Status: Backlog
+Status: In Progress
 Priority: P1
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend
