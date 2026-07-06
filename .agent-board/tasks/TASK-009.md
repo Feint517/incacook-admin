@@ -1,6 +1,6 @@
 # TASK-009 — KYC review queue → /v1/admin/kyc/documents (NEW page)
 
-Status: Backlog
+Status: In Progress
 Priority: P0
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend

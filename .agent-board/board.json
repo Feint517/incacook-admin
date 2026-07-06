@@ -47,7 +47,7 @@
     {
       "id": "TASK-004",
       "title": "Dashboard overview → /v1/admin/dashboard/*",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P0",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-004.md",
@@ -59,7 +59,7 @@
     {
       "id": "TASK-005",
       "title": "Users list + detail → /v1/admin/users",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P0",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-005.md",
@@ -105,7 +105,7 @@
     {
       "id": "TASK-009",
       "title": "KYC review queue → /v1/admin/kyc/documents (NEW page)",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P0",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-009.md",

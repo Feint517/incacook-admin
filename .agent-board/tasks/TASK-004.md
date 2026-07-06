@@ -1,6 +1,6 @@
 # TASK-004 — Dashboard overview → /v1/admin/dashboard/*
 
-Status: Backlog
+Status: In Progress
 Priority: P0
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend

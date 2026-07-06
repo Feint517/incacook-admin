@@ -1,6 +1,6 @@
 # TASK-005 — Users list + detail → /v1/admin/users
 
-Status: Backlog
+Status: In Progress
 Priority: P0
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend
