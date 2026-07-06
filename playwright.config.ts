@@ -26,7 +26,21 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // Unauthed specs (auth gate, live non-admin) — no saved session.
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: [/auth\.setup\.ts/, /authed\.spec\.ts/],
+    },
+    // Log in once, save session.
+    { name: "setup", testMatch: /auth\.setup\.ts/ },
+    // Authed dashboard flows — reuse the saved session.
+    {
+      name: "authed",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: /authed\.spec\.ts/,
+      dependencies: ["setup"],
+    },
   ],
   webServer: {
     command: `pnpm dev --port ${PORT}`,

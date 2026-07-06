@@ -17,3 +17,6 @@ node_modules
 /playwright-report
 /blob-report
 /playwright/.cache
+
+# Playwright saved auth sessions (contain tokens)
+/e2e/.auth
