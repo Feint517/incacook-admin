@@ -1,6 +1,6 @@
 # TASK-006 — User moderation — strikes + suspend/unsuspend
 
-Status: Backlog
+Status: In Progress
 Priority: P1
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend

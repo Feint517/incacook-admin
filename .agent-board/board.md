@@ -23,11 +23,11 @@ Updated: 2026-07-06
 | TASK-003 | Shared data-table query infra (pagination, filters, states) | Done | Agent | P1 |
 | TASK-004 | Dashboard overview → /v1/admin/dashboard/* | Done | Agent | P0 |
 | TASK-005 | Users list + detail → /v1/admin/users | Done | Agent | P0 |
-| TASK-006 | User moderation — strikes + suspend/unsuspend | Backlog | Agent | P1 |
-| TASK-007 | Reports moderation → /v1/admin/reports | Backlog | Agent | P1 |
+| TASK-006 | User moderation — strikes + suspend/unsuspend | In Progress | Agent | P1 |
+| TASK-007 | Reports moderation → /v1/admin/reports | In Progress | Agent | P1 |
 | TASK-008 | Geography map → /v1/admin/dashboard/cities | Backlog | Agent | P2 |
 | TASK-009 | KYC review queue → /v1/admin/kyc/documents (NEW page) | Done | Agent | P0 |
-| TASK-010 | Disputes management → /v1/admin/disputes (NEW page) | Backlog | Agent | P0 |
+| TASK-010 | Disputes management → /v1/admin/disputes (NEW page) | In Progress | Agent | P0 |
 | TASK-011 | Catalog claims → /v1/admin/catalog-claims (NEW page) | Backlog | Agent | P1 |
 | TASK-012 | Supply catalog products CRUD + orders → /v1/admin/catalog/* | Backlog | Agent | P2 |
 | TASK-013 | Broadcast notifications → /v1/admin/notifications/send | Backlog | Agent | P2 |
