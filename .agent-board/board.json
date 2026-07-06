@@ -1,0 +1,251 @@
+{
+  "project": "IncaCook Admin",
+  "currentFocus": "Replace mock data with the real IncaCook backend admin surface (/v1/admin/*), behind admin/moderator auth",
+  "currentMilestone": "Phase 1 — Wire admin panel to /v1/admin backend",
+  "updated": "2026-07-06",
+  "recommendedStart": "TASK-001",
+  "columns": [
+    "Backlog",
+    "Ready",
+    "In Progress",
+    "Review",
+    "Blocked",
+    "Done"
+  ],
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "API client, response envelope, and error codes",
+      "status": "Done",
+      "priority": "P0",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-001.md",
+      "blockedBy": []
+    },
+    {
+      "id": "TASK-002",
+      "title": "Admin authentication, session, and route guard",
+      "status": "Backlog",
+      "priority": "P0",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-002.md",
+      "blockedBy": [
+        "TASK-001"
+      ]
+    },
+    {
+      "id": "TASK-003",
+      "title": "Shared data-table query infra (pagination, filters, states)",
+      "status": "Backlog",
+      "priority": "P1",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-003.md",
+      "blockedBy": [
+        "TASK-001"
+      ]
+    },
+    {
+      "id": "TASK-004",
+      "title": "Dashboard overview → /v1/admin/dashboard/*",
+      "status": "Backlog",
+      "priority": "P0",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-004.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-005",
+      "title": "Users list + detail → /v1/admin/users",
+      "status": "Backlog",
+      "priority": "P0",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-005.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-006",
+      "title": "User moderation — strikes + suspend/unsuspend",
+      "status": "Backlog",
+      "priority": "P1",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-006.md",
+      "blockedBy": [
+        "TASK-005"
+      ]
+    },
+    {
+      "id": "TASK-007",
+      "title": "Reports moderation → /v1/admin/reports",
+      "status": "Backlog",
+      "priority": "P1",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-007.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-008",
+      "title": "Geography map → /v1/admin/dashboard/cities",
+      "status": "Backlog",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-008.md",
+      "blockedBy": [
+        "TASK-004"
+      ]
+    },
+    {
+      "id": "TASK-009",
+      "title": "KYC review queue → /v1/admin/kyc/documents (NEW page)",
+      "status": "Backlog",
+      "priority": "P0",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-009.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-010",
+      "title": "Disputes management → /v1/admin/disputes (NEW page)",
+      "status": "Backlog",
+      "priority": "P0",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-010.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-011",
+      "title": "Catalog claims → /v1/admin/catalog-claims (NEW page)",
+      "status": "Backlog",
+      "priority": "P1",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-011.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-012",
+      "title": "Supply catalog products CRUD + orders → /v1/admin/catalog/*",
+      "status": "Backlog",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-012.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-013",
+      "title": "Broadcast notifications → /v1/admin/notifications/send",
+      "status": "Backlog",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-013.md",
+      "blockedBy": [
+        "TASK-002"
+      ]
+    },
+    {
+      "id": "TASK-014",
+      "title": "Legal documents management → /v1/admin/legal-documents",
+      "status": "Backlog",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-014.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-015",
+      "title": "Orders page — needs an admin orders endpoint (backend dependency)",
+      "status": "Blocked",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-015.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-016",
+      "title": "Sellers page — needs an admin sellers endpoint (backend dependency)",
+      "status": "Blocked",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-016.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-017",
+      "title": "Listings page — needs an admin listings endpoint (backend dependency)",
+      "status": "Blocked",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-017.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-018",
+      "title": "Env config, API base URL, and README",
+      "status": "Done",
+      "priority": "P1",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-018.md",
+      "blockedBy": [
+        "TASK-001"
+      ]
+    },
+    {
+      "id": "TASK-019",
+      "title": "Remove mock-data generator and delete dead mock leaks",
+      "status": "Backlog",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-019.md",
+      "blockedBy": [
+        "TASK-004",
+        "TASK-005",
+        "TASK-006",
+        "TASK-007",
+        "TASK-008",
+        "TASK-009",
+        "TASK-010",
+        "TASK-011"
+      ]
+    },
+    {
+      "id": "TASK-020",
+      "title": "CI quality gates (typecheck + lint + build)",
+      "status": "Done",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-020.md",
+      "blockedBy": []
+    }
+  ]
+}
