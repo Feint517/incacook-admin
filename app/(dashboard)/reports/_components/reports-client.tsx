@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Flag, CheckCircle2, Clock, AlertOctagon } from "lucide-react";
-import { StatCard } from "@/components/dashboard/stat-card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Flag } from "lucide-react";
+import { useAdminQuery } from "@/lib/query";
 import { DataTable, type Column } from "@/components/dashboard/data-table";
-import { ReportStatusBadge } from "@/components/dashboard/status-badge";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -14,59 +12,85 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatDateFr } from "@/lib/utils";
 import { ReportDrawer } from "./report-drawer";
-import { formatNum, formatDateFr } from "@/lib/utils";
-import type { Report } from "@/lib/mock-data/types";
+import {
+  REPORT_STATUS_LABEL,
+  REPORT_STATUS_VARIANT,
+  REPORT_TYPE_LABEL,
+  STATUS_FILTERS,
+  TYPE_FILTERS,
+  type ReportListItem,
+  type ReportReason,
+  type ReportStatus,
+} from "./types";
 
-interface Props {
-  reports: Report[];
-  stats: { open: number; resolvedThisWeek: number; avgResolution: string; repeatOffenders: number };
-}
+const PAGE_SIZE = 20;
 
-export function ReportsClient({ reports, stats }: Props) {
-  const [tab, setTab] = useState("all");
-  const [status, setStatus] = useState("all");
-  const [severity, setSeverity] = useState("all");
-  const [active, setActive] = useState<Report | null>(null);
+const ALL = "all";
 
-  const filtered = useMemo(
-    () =>
-      reports.filter((r) => {
-        if (tab !== "all" && r.type !== tab) return false;
-        if (status !== "all" && r.status !== status) return false;
-        if (severity !== "all" && r.severity !== severity) return false;
-        return true;
-      }),
-    [reports, tab, status, severity],
-  );
+export function ReportsClient() {
+  const [status, setStatus] = useState<ReportStatus | typeof ALL>(ALL);
+  const [type, setType] = useState<ReportReason | typeof ALL>(ALL);
+  const [page, setPage] = useState(1);
+  const [active, setActive] = useState<ReportListItem | null>(null);
 
-  const cols: Column<Report>[] = [
+  const { data, pagination, isLoading, isError, error, refetch } =
+    useAdminQuery<ReportListItem[]>({
+      path: "/admin/reports",
+      params: {
+        limit: PAGE_SIZE,
+        offset: (page - 1) * PAGE_SIZE,
+        extra: {
+          ...(status !== ALL ? { status } : {}),
+          ...(type !== ALL ? { type } : {}),
+        },
+      },
+    });
+
+  const rows = data ?? [];
+
+  function changeStatusFilter(next: ReportStatus | typeof ALL) {
+    setStatus(next);
+    setPage(1);
+  }
+
+  function changeTypeFilter(next: ReportReason | typeof ALL) {
+    setType(next);
+    setPage(1);
+  }
+
+  const cols: Column<ReportListItem>[] = [
     {
-      key: "id",
-      header: "ID",
-      cell: (r) => <span className="font-mono text-[12px] text-on-surface-variant">{r.id}</span>,
-      width: "100px",
-    },
-    {
-      key: "date",
+      key: "createdAt",
       header: "Date",
-      cell: (r) => <span className="text-[12px] text-on-surface-variant">{formatDateFr(r.date)}</span>,
-      width: "110px",
+      width: "120px",
+      cell: (r) => (
+        <span className="text-[12px] text-on-surface-variant">
+          {formatDateFr(r.createdAt)}
+        </span>
+      ),
     },
     {
       key: "type",
       header: "Type",
-      cell: (r) => <Badge variant={r.type === "Hygiène" ? "error" : "warning"}>{r.type}</Badge>,
-      width: "150px",
+      width: "160px",
+      cell: (r) => (
+        <Badge variant={r.type === "MAUVAISE_HYGIENE" ? "error" : "warning"}>
+          {REPORT_TYPE_LABEL[r.type] ?? r.type}
+        </Badge>
+      ),
     },
     {
       key: "entity",
       header: "Entité signalée",
       cell: (r) => (
         <div className="min-w-0">
-          <div className="truncate text-[13px] font-medium text-on-surface">{r.entityName}</div>
+          <div className="truncate text-[13px] font-medium text-on-surface">
+            {r.listing?.name ?? r.seller?.name ?? r.targetId}
+          </div>
           <div className="text-[10.5px] uppercase tracking-wider text-on-surface-variant">
-            {r.entityType === "listing" ? "Annonce" : "Vendeur"}
+            {r.targetType === "LISTING" ? "Annonce" : "Vendeur"}
           </div>
         </div>
       ),
@@ -74,84 +98,93 @@ export function ReportsClient({ reports, stats }: Props) {
     {
       key: "reporter",
       header: "Auteur",
-      cell: (r) => <span className="text-[12px] text-on-surface-variant">{r.reporter}</span>,
-      width: "80px",
+      cell: (r) => (
+        <span className="truncate text-[12px] text-on-surface-variant">
+          {r.reporter?.name || r.reporter?.email || "—"}
+        </span>
+      ),
     },
     {
       key: "status",
       header: "Statut",
-      cell: (r) => <ReportStatusBadge status={r.status} />,
       width: "120px",
-    },
-    {
-      key: "severity",
-      header: "Sévérité",
       cell: (r) => (
-        <Badge
-          variant={r.severity === "high" ? "error" : r.severity === "medium" ? "warning" : "neutral"}
-        >
-          {r.severity === "high" ? "Élevée" : r.severity === "medium" ? "Moyenne" : "Faible"}
+        <Badge variant={REPORT_STATUS_VARIANT[r.status]}>
+          {REPORT_STATUS_LABEL[r.status] ?? r.status}
         </Badge>
       ),
-      width: "110px",
     },
   ];
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label="Signalements ouverts" value={formatNum(stats.open)} icon={Flag} accent="error" />
-        <StatCard label="Résolus cette semaine" value={formatNum(stats.resolvedThisWeek)} icon={CheckCircle2} accent="success" />
-        <StatCard label="Temps moyen de résolution" value={stats.avgResolution} icon={Clock} accent="info" />
-        <StatCard label="Récidivistes" value={formatNum(stats.repeatOffenders)} icon={AlertOctagon} accent="warning" />
-      </div>
-
-      <div className="frost mt-4 flex flex-wrap items-center gap-2 rounded-md p-3">
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList>
-            <TabsTrigger value="all">Tous</TabsTrigger>
-            <TabsTrigger value="Hygiène">Hygiène</TabsTrigger>
-            <TabsTrigger value="Non fait maison">Non fait maison</TabsTrigger>
-            <TabsTrigger value="Autre">Autre</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <div className="flex flex-wrap items-center gap-2">
-          <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="h-8 w-[140px] text-xs">
-              <SelectValue placeholder="Statut" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tous statuts</SelectItem>
-              <SelectItem value="open">Ouverts</SelectItem>
-              <SelectItem value="review">En revue</SelectItem>
-              <SelectItem value="resolved">Résolus</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={severity} onValueChange={setSeverity}>
-            <SelectTrigger className="h-8 w-[140px] text-xs">
-              <SelectValue placeholder="Sévérité" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Toutes</SelectItem>
-              <SelectItem value="high">Élevée</SelectItem>
-              <SelectItem value="medium">Moyenne</SelectItem>
-              <SelectItem value="low">Faible</SelectItem>
-            </SelectContent>
-          </Select>
+      <div className="frost mb-4 flex flex-wrap items-center gap-2 rounded-md p-3">
+        <div className="mr-auto inline-flex items-center gap-2 text-[13px] text-on-surface-variant">
+          <Flag className="h-4 w-4" />
+          File de modération
         </div>
+        <Select
+          value={status}
+          onValueChange={(v) => changeStatusFilter(v as ReportStatus | typeof ALL)}
+        >
+          <SelectTrigger className="h-8 w-[150px] text-xs" aria-label="Filtrer par statut">
+            <SelectValue placeholder="Statut" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL}>Tous statuts</SelectItem>
+            {STATUS_FILTERS.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={type}
+          onValueChange={(v) => changeTypeFilter(v as ReportReason | typeof ALL)}
+        >
+          <SelectTrigger className="h-8 w-[170px] text-xs" aria-label="Filtrer par type">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ALL}>Tous types</SelectItem>
+            {TYPE_FILTERS.map((t) => (
+              <SelectItem key={t.value} value={t.value}>
+                {t.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="mt-3">
-        <DataTable
-          columns={cols}
-          rows={filtered}
-          rowKey={(r) => r.id}
-          onRowClick={(r) => setActive(r)}
-          pageSize={12}
-        />
-      </div>
+      <DataTable
+        columns={cols}
+        rows={rows}
+        rowKey={(r) => r.id}
+        onRowClick={(r) => setActive(r)}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+        onRetry={refetch}
+        emptyLabel="Aucun signalement pour ces filtres."
+        pageSize={PAGE_SIZE}
+        serverPagination={{
+          pagination,
+          page,
+          onPageChange: setPage,
+          pageSize: PAGE_SIZE,
+          isFetching: isLoading,
+        }}
+      />
 
-      <ReportDrawer report={active} reports={reports} onClose={() => setActive(null)} />
+      <ReportDrawer
+        report={active}
+        onClose={() => setActive(null)}
+        onUpdated={(next) => {
+          setActive((prev) => (prev ? { ...prev, status: next } : prev));
+          refetch();
+        }}
+      />
     </>
   );
 }
