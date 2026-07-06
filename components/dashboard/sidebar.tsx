@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Users,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth";
 import { useEffect, useState } from "react";
 
 const NAV = [
@@ -31,10 +32,24 @@ const NAV = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const { signOut } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => setMounted(true), []);
+
+  async function handleSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await signOut();
+      router.replace("/login");
+    } finally {
+      setSigningOut(false);
+    }
+  }
 
   return (
     <aside
@@ -84,8 +99,10 @@ export function Sidebar() {
       )}
 
       <button
+        onClick={handleSignOut}
+        disabled={signingOut}
         title="Déconnexion"
-        className="group relative flex h-11 w-11 items-center justify-center rounded-2xl bg-error/10 text-error transition-colors hover:bg-error hover:text-white"
+        className="group relative flex h-11 w-11 items-center justify-center rounded-2xl bg-error/10 text-error transition-colors hover:bg-error hover:text-white disabled:pointer-events-none disabled:opacity-50"
       >
         <LogOut className="h-5 w-5" />
         <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-md border border-outline-variant bg-surface-container-high px-2 py-1 text-[11px] font-medium text-on-surface opacity-0 shadow-md transition-opacity group-hover:opacity-100">
