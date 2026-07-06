@@ -1,132 +1,171 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, Repeat, UserPlus, User2 } from "lucide-react";
-import { StatCard } from "@/components/dashboard/stat-card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Search } from "lucide-react";
+import type { Pagination } from "@/lib/api";
+import { useAdminQuery } from "@/lib/query";
 import { DataTable, type Column } from "@/components/dashboard/data-table";
-import { RoleBadge } from "@/components/dashboard/role-badge";
-import { UserStatusBadge } from "@/components/dashboard/status-badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { formatDateFr } from "@/lib/utils";
 import { UserDrawer } from "./user-drawer";
-import { formatDateFr, formatNum, relativeTimeFr } from "@/lib/utils";
-import type { Order, Seller, User } from "@/lib/mock-data/types";
+import {
+  fullName,
+  initialsOf,
+  UserRoleBadge,
+  UserStatus,
+  type AdminUser,
+  type AdminUsersListResponse,
+} from "./user-model";
 
-interface Props {
-  users: User[];
-  sellers: Seller[];
-  stats: { total: number; recurring: number; newThisWeek: number };
-  ordersByUserId: Record<string, Order[]>;
-}
+const PAGE_SIZE = 20;
 
-export function UsersClient({ users, sellers, stats, ordersByUserId }: Props) {
-  const [tab, setTab] = useState("all");
+export function UsersClient() {
+  // Server-driven list state — lifted here and fed into `useAdminQuery`.
   const [search, setSearch] = useState("");
-  const [active, setActive] = useState<User | null>(null);
+  const [page, setPage] = useState(1); // 1-based
+  const [active, setActive] = useState<AdminUser | null>(null);
 
-  const filtered = useMemo(() => {
-    return users.filter((u) => {
-      if (tab === "buyers" && u.role !== "buyer") return false;
-      if (tab === "sellers" && !u.role.startsWith("seller-")) return false;
-      if (tab === "drivers" && u.role !== "driver") return false;
-      if (search && !u.name.toLowerCase().includes(search.toLowerCase()) && !u.email.toLowerCase().includes(search.toLowerCase()))
-        return false;
-      return true;
+  // The backend contract is offset/limit (it ignores `page`). `useAdminQuery`
+  // debounces `search` internally before it hits the wire.
+  const { data, isLoading, isError, error, refetch } =
+    useAdminQuery<AdminUsersListResponse>({
+      path: "/admin/users",
+      params: {
+        search,
+        limit: PAGE_SIZE,
+        offset: (page - 1) * PAGE_SIZE,
+      },
     });
-  }, [users, tab, search]);
 
-  const cols: Column<User>[] = [
+  const rows = data ?? [];
+
+  // The list endpoint returns a bare array (no `total`/`hasMore`), so synthesize
+  // a next-only pagination envelope: a full page implies there may be more.
+  const pagination: Pagination = {
+    hasMore: rows.length >= PAGE_SIZE,
+    total: null,
+    nextCursor: null,
+    page,
+    limit: PAGE_SIZE,
+  };
+
+  const cols: Column<AdminUser>[] = [
     {
       key: "name",
       header: "Utilisateur",
       cell: (u) => (
         <div className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
-            <AvatarImage src={u.avatar} alt={u.name} />
-            <AvatarFallback>{u.name.split(" ").map((s) => s[0]).join("").slice(0, 2)}</AvatarFallback>
+            <AvatarFallback>{initialsOf(u)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <div className="truncate text-[13px] font-medium text-on-surface">{u.name}</div>
-            <div className="truncate text-[11px] text-on-surface-variant">{u.email}</div>
+            <div className="truncate text-[13px] font-medium text-on-surface">
+              {fullName(u)}
+            </div>
+            <div className="truncate text-[11px] text-on-surface-variant">
+              {u.email}
+            </div>
           </div>
         </div>
       ),
     },
-    { key: "role", header: "Rôle", cell: (u) => <RoleBadge role={u.role} />, width: "200px" },
-    { key: "city", header: "Ville", cell: (u) => <span className="text-[13px]">{u.city}</span>, width: "120px" },
+    {
+      key: "role",
+      header: "Rôle",
+      cell: (u) => <UserRoleBadge role={u.role} />,
+      width: "140px",
+    },
+    {
+      key: "phone",
+      header: "Téléphone",
+      cell: (u) => (
+        <span className="text-[13px] tabular-nums text-on-surface-variant">
+          {u.phone ?? "—"}
+        </span>
+      ),
+      width: "150px",
+    },
+    {
+      key: "rating",
+      header: "Note",
+      align: "right",
+      cell: (u) =>
+        u.averageRating != null ? (
+          <span className="text-[13px] tabular-nums text-on-surface">
+            {u.averageRating.toFixed(1)}
+            <span className="text-on-surface-variant"> / 5</span>
+            {u.reviewCount != null && (
+              <span className="ml-1 text-[11px] text-on-surface-variant">
+                ({u.reviewCount})
+              </span>
+            )}
+          </span>
+        ) : (
+          <span className="text-[13px] text-on-surface-variant">—</span>
+        ),
+      width: "120px",
+    },
+    {
+      key: "status",
+      header: "Statut",
+      cell: (u) => <UserStatus user={u} />,
+      width: "120px",
+    },
     {
       key: "joined",
       header: "Inscrit le",
-      cell: (u) => <span className="text-[13px] text-on-surface-variant">{formatDateFr(u.joined)}</span>,
+      cell: (u) => (
+        <span className="text-[13px] text-on-surface-variant">
+          {formatDateFr(u.createdAt)}
+        </span>
+      ),
       width: "110px",
-    },
-    {
-      key: "transactions",
-      header: "Transactions",
-      align: "right",
-      cell: (u) => <span className="font-medium tabular-nums">{formatNum(u.totalTransactions)}</span>,
-      width: "120px",
-    },
-    { key: "status", header: "Statut", cell: (u) => <UserStatusBadge status={u.status} />, width: "120px" },
-    {
-      key: "active",
-      header: "Dernière activité",
-      cell: (u) => <span className="text-[12px] text-on-surface-variant">{relativeTimeFr(u.lastActive)}</span>,
-      width: "140px",
     },
   ];
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <StatCard label="Total utilisateurs" value={formatNum(stats.total)} icon={User2} accent="info" />
-        <StatCard
-          label="Récurrents"
-          value={formatNum(stats.recurring)}
-          hint="≥ 2 transactions"
-          icon={Repeat}
-          accent="primary"
-        />
-        <StatCard label="Nouveaux cette semaine" value={formatNum(stats.newThisWeek)} icon={UserPlus} accent="success" />
-      </div>
-
-      <div className="frost mt-4 flex flex-col gap-3 rounded-md p-3 lg:flex-row lg:items-center lg:justify-between">
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList>
-            <TabsTrigger value="all">Tous</TabsTrigger>
-            <TabsTrigger value="buyers">Acheteurs</TabsTrigger>
-            <TabsTrigger value="sellers">Vendeurs</TabsTrigger>
-            <TabsTrigger value="drivers">Livreurs</TabsTrigger>
-          </TabsList>
-        </Tabs>
+      <div className="frost mb-3 flex items-center justify-end rounded-md p-3">
         <div className="relative">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-on-surface-variant" />
           <Input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher…"
-            className="h-8 w-48 pl-8 text-xs"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1); // new query resets to the first page
+            }}
+            placeholder="Rechercher (nom, email, téléphone, id)…"
+            className="h-8 w-72 pl-8 text-xs"
           />
         </div>
       </div>
 
-      <div className="mt-3">
-        <DataTable
-          columns={cols}
-          rows={filtered}
-          rowKey={(u) => u.id}
-          onRowClick={(u) => setActive(u)}
-          pageSize={12}
-        />
-      </div>
-
-      <UserDrawer
-        user={active}
-        seller={active ? sellers.find((s) => s.id === active.id) : undefined}
-        orders={active ? ordersByUserId[active.id] || [] : []}
-        onClose={() => setActive(null)}
+      <DataTable
+        columns={cols}
+        rows={rows}
+        rowKey={(u) => u.id}
+        onRowClick={(u) => setActive(u)}
+        pageSize={PAGE_SIZE}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+        onRetry={refetch}
+        emptyLabel={
+          search
+            ? "Aucun utilisateur ne correspond à cette recherche."
+            : "Aucun utilisateur."
+        }
+        serverPagination={{
+          pagination,
+          page,
+          onPageChange: setPage,
+          pageSize: PAGE_SIZE,
+          isFetching: isLoading,
+        }}
       />
+
+      <UserDrawer user={active} onClose={() => setActive(null)} />
     </>
   );
 }
