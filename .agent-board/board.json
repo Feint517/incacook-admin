@@ -71,7 +71,7 @@
     {
       "id": "TASK-006",
       "title": "User moderation — strikes + suspend/unsuspend",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P1",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-006.md",
@@ -82,7 +82,7 @@
     {
       "id": "TASK-007",
       "title": "Reports moderation → /v1/admin/reports",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P1",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-007.md",
@@ -117,7 +117,7 @@
     {
       "id": "TASK-010",
       "title": "Disputes management → /v1/admin/disputes (NEW page)",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P0",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-010.md",
