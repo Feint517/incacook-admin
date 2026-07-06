@@ -10,6 +10,7 @@ import {
   Store,
   Tag,
   Flag,
+  Scale,
   ShieldCheck,
   MapPinned,
   Sun,
@@ -28,6 +29,7 @@ const NAV = [
   { href: "/sellers", label: "Vendeurs", icon: Store },
   { href: "/listings", label: "Annonces", icon: Tag },
   { href: "/reports", label: "Signalements", icon: Flag },
+  { href: "/disputes", label: "Litiges", icon: Scale },
   { href: "/kyc", label: "Vérifications KYC", icon: ShieldCheck },
   { href: "/geography", label: "Carte", icon: MapPinned },
 ];
