@@ -1,6 +1,6 @@
 # TASK-016 — Sellers page — needs an admin sellers endpoint (backend dependency)
 
-Status: Backlog
+Status: In Progress
 Priority: P2
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend
