@@ -12,7 +12,10 @@ import {
   Flag,
   Scale,
   ShieldCheck,
+  PackageOpen,
   MapPinned,
+  Megaphone,
+  FileText,
   Sun,
   Moon,
   LogOut,
@@ -31,7 +34,10 @@ const NAV = [
   { href: "/reports", label: "Signalements", icon: Flag },
   { href: "/disputes", label: "Litiges", icon: Scale },
   { href: "/kyc", label: "Vérifications KYC", icon: ShieldCheck },
+  { href: "/catalog-claims", label: "Réclamations catalogue", icon: PackageOpen },
   { href: "/geography", label: "Carte", icon: MapPinned },
+  { href: "/notifications", label: "Notifications", icon: Megaphone },
+  { href: "/legal", label: "Documents légaux", icon: FileText },
 ];
 
 export function Sidebar() {
