@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, ShoppingBag, Activity, Wallet, Package } from "lucide-react";
-import { StatCard } from "@/components/dashboard/stat-card";
+import { useState } from "react";
+import { Search, Truck, Store } from "lucide-react";
+import { useAdminQuery } from "@/lib/query";
 import { DataTable, type Column } from "@/components/dashboard/data-table";
-import { OrderStatusBadge } from "@/components/dashboard/status-badge";
-import { CategoryBadge } from "@/components/dashboard/category-badge";
 import {
   Select,
   SelectContent,
@@ -14,64 +12,86 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { formatEur, relativeTimeFr } from "@/lib/utils";
 import { OrderDrawer } from "./order-drawer";
-import { formatEur, formatNum, relativeTimeFr } from "@/lib/utils";
-import { Truck, Store } from "lucide-react";
-import type { Order } from "@/lib/mock-data/types";
+import {
+  cityLabel,
+  ORDER_STATUS_FILTERS,
+  OrderCategoryBadge,
+  OrderStatusBadge,
+  toEuros,
+  type AdminOrder,
+  type AdminOrdersListResponse,
+  type OrderStatus,
+} from "./order-model";
 
-interface Props {
-  orders: Order[];
-  stats: { today: number; active: number; avg: number; awaiting: number };
-}
+const PAGE_SIZE = 20;
 
-export function OrdersClient({ orders, stats }: Props) {
-  const [status, setStatus] = useState("all");
-  const [category, setCategory] = useState("all");
-  const [fulfillment, setFulfillment] = useState("all");
-  const [city, setCity] = useState("all");
+const ALL = "all";
+
+export function OrdersClient() {
+  // Server-driven list state — lifted here and fed into `useAdminQuery`.
+  const [status, setStatus] = useState<OrderStatus | typeof ALL>(ALL);
   const [search, setSearch] = useState("");
-  const [active, setActive] = useState<Order | null>(null);
+  const [page, setPage] = useState(1); // 1-based
+  const [active, setActive] = useState<AdminOrder | null>(null);
 
-  const cities = useMemo(() => Array.from(new Set(orders.map((o) => o.city))).sort(), [orders]);
+  // Offset/limit contract; `useAdminQuery` debounces `search` before the wire.
+  // The endpoint returns `{ items, hasMore }` (NO total) → `pagination.hasMore`
+  // from the hook drives next-only pagination.
+  const { data, pagination, isLoading, isError, error, refetch } =
+    useAdminQuery<AdminOrdersListResponse>({
+      path: "/admin/orders",
+      params: {
+        search,
+        limit: PAGE_SIZE,
+        offset: (page - 1) * PAGE_SIZE,
+        extra: {
+          ...(status !== ALL ? { status } : {}),
+        },
+      },
+    });
 
-  const filtered = useMemo(
-    () =>
-      orders.filter((o) => {
-        if (status !== "all" && o.status !== status) return false;
-        if (category !== "all" && o.category !== category) return false;
-        if (fulfillment !== "all" && o.fulfillment !== fulfillment) return false;
-        if (city !== "all" && o.city !== city) return false;
-        if (search && !o.id.includes(search.toLowerCase())) return false;
-        return true;
-      }),
-    [orders, status, category, fulfillment, city, search],
-  );
+  const rows = data ?? [];
 
-  const cols: Column<Order>[] = [
+  function changeStatusFilter(next: OrderStatus | typeof ALL) {
+    setStatus(next);
+    setPage(1); // new query resets to the first page
+  }
+
+  const cols: Column<AdminOrder>[] = [
     {
-      key: "id",
-      header: "ID",
-      cell: (o) => <span className="font-mono text-[12px] text-on-surface-variant">{o.id}</span>,
-      width: "100px",
+      key: "orderNumber",
+      header: "Commande",
+      cell: (o) => (
+        <span className="font-mono text-[12px] text-on-surface-variant">
+          {o.orderNumber}
+        </span>
+      ),
+      width: "120px",
     },
     {
       key: "date",
       header: "Date",
-      cell: (o) => <span className="text-[12px] text-on-surface-variant">{relativeTimeFr(o.date)}</span>,
+      cell: (o) => (
+        <span className="text-[12px] text-on-surface-variant">
+          {relativeTimeFr(o.createdAt)}
+        </span>
+      ),
       width: "120px",
     },
     {
       key: "buyer",
       header: "Acheteur",
-      cell: (o) => <span className="text-[13px]">{o.buyerName}</span>,
+      cell: (o) => <span className="text-[13px]">{o.buyer.name || "—"}</span>,
     },
     {
       key: "seller",
       header: "Vendeur",
       cell: (o) => (
         <div className="min-w-0">
-          <div className="truncate text-[13px]">{o.sellerName}</div>
-          <CategoryBadge category={o.category} />
+          <div className="truncate text-[13px]">{o.seller.name || "—"}</div>
+          <OrderCategoryBadge category={o.category} />
         </div>
       ),
     },
@@ -79,14 +99,20 @@ export function OrdersClient({ orders, stats }: Props) {
       key: "items",
       header: "Articles",
       align: "center",
-      cell: (o) => <span className="font-medium tabular-nums">{o.itemCount}</span>,
+      cell: (o) => (
+        <span className="font-medium tabular-nums">{o.itemCount}</span>
+      ),
       width: "80px",
     },
     {
       key: "total",
       header: "Total",
       align: "right",
-      cell: (o) => <span className="font-semibold tabular-nums">{formatEur(o.total, { cents: true })}</span>,
+      cell: (o) => (
+        <span className="font-semibold tabular-nums">
+          {formatEur(toEuros(o.totalCents), { cents: true })}
+        </span>
+      ),
       width: "100px",
     },
     {
@@ -94,18 +120,39 @@ export function OrdersClient({ orders, stats }: Props) {
       header: "Type",
       cell: (o) => (
         <div className="flex items-center gap-1.5 text-[12px] text-on-surface-variant">
-          {o.fulfillment === "delivery" ? <Truck className="h-3.5 w-3.5" /> : <Store className="h-3.5 w-3.5" />}
+          {o.fulfillment === "delivery" ? (
+            <Truck className="h-3.5 w-3.5" />
+          ) : (
+            <Store className="h-3.5 w-3.5" />
+          )}
           {o.fulfillment === "delivery" ? "Livraison" : "Retrait"}
         </div>
       ),
       width: "110px",
     },
-    { key: "status", header: "Statut", cell: (o) => <OrderStatusBadge status={o.status} />, width: "130px" },
+    {
+      key: "city",
+      header: "Ville",
+      cell: (o) => (
+        <span className="text-[12px] text-on-surface-variant">
+          {cityLabel(o)}
+        </span>
+      ),
+      width: "120px",
+    },
+    {
+      key: "status",
+      header: "Statut",
+      cell: (o) => <OrderStatusBadge status={o.status} />,
+      width: "140px",
+    },
     {
       key: "driver",
       header: "Livreur",
       cell: (o) => (
-        <span className="text-[12px] text-on-surface-variant">{o.driverName ?? "—"}</span>
+        <span className="text-[12px] text-on-surface-variant">
+          {o.driver?.name ?? "—"}
+        </span>
       ),
       width: "140px",
     },
@@ -113,59 +160,22 @@ export function OrdersClient({ orders, stats }: Props) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label="Commandes aujourd'hui" value={formatNum(stats.today)} icon={ShoppingBag} accent="primary" />
-        <StatCard label="Commandes actives" value={formatNum(stats.active)} icon={Activity} accent="info" />
-        <StatCard label="Panier moyen" value={formatEur(stats.avg, { cents: true })} icon={Wallet} accent="secondary" />
-        <StatCard label="En attente livraison" value={formatNum(stats.awaiting)} icon={Package} accent="warning" />
-      </div>
-
-      <div className="frost mt-4 flex flex-wrap items-center gap-2 rounded-md p-3">
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="h-8 w-[150px] text-xs">
+      <div className="frost mb-3 flex flex-wrap items-center gap-2 rounded-md p-3">
+        <Select
+          value={status}
+          onValueChange={(v) => changeStatusFilter(v as OrderStatus | typeof ALL)}
+        >
+          <SelectTrigger
+            className="h-8 w-[170px] text-xs"
+            aria-label="Filtrer par statut"
+          >
             <SelectValue placeholder="Statut" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous statuts</SelectItem>
-            <SelectItem value="new">Nouvelle</SelectItem>
-            <SelectItem value="accepted">Acceptée</SelectItem>
-            <SelectItem value="preparing">En préparation</SelectItem>
-            <SelectItem value="ready">Prête</SelectItem>
-            <SelectItem value="delivering">En livraison</SelectItem>
-            <SelectItem value="completed">Livrée</SelectItem>
-            <SelectItem value="cancelled">Annulée</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="h-8 w-[170px] text-xs">
-            <SelectValue placeholder="Catégorie" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes catégories</SelectItem>
-            <SelectItem value="faitMaison">Fait Maison</SelectItem>
-            <SelectItem value="traiteur">Traiteur</SelectItem>
-            <SelectItem value="restaurant">Restaurant</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={fulfillment} onValueChange={setFulfillment}>
-          <SelectTrigger className="h-8 w-[130px] text-xs">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous types</SelectItem>
-            <SelectItem value="delivery">Livraison</SelectItem>
-            <SelectItem value="pickup">Retrait</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={city} onValueChange={setCity}>
-          <SelectTrigger className="h-8 w-[130px] text-xs">
-            <SelectValue placeholder="Ville" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes villes</SelectItem>
-            {cities.map((c) => (
-              <SelectItem key={c} value={c}>
-                {c}
+            <SelectItem value={ALL}>Tous statuts</SelectItem>
+            {ORDER_STATUS_FILTERS.map((s) => (
+              <SelectItem key={s.value} value={s.value}>
+                {s.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -174,22 +184,39 @@ export function OrdersClient({ orders, stats }: Props) {
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-on-surface-variant" />
           <Input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="ID commande…"
-            className="h-8 w-44 pl-8 text-xs"
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1); // new query resets to the first page
+            }}
+            placeholder="N° commande, id, acheteur…"
+            className="h-8 w-64 pl-8 text-xs"
           />
         </div>
       </div>
 
-      <div className="mt-3">
-        <DataTable
-          columns={cols}
-          rows={filtered}
-          rowKey={(o) => o.id}
-          onRowClick={(o) => setActive(o)}
-          pageSize={12}
-        />
-      </div>
+      <DataTable
+        columns={cols}
+        rows={rows}
+        rowKey={(o) => o.id}
+        onRowClick={(o) => setActive(o)}
+        pageSize={PAGE_SIZE}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+        onRetry={refetch}
+        emptyLabel={
+          search || status !== ALL
+            ? "Aucune commande ne correspond à ces filtres."
+            : "Aucune commande."
+        }
+        serverPagination={{
+          pagination,
+          page,
+          onPageChange: setPage,
+          pageSize: PAGE_SIZE,
+          isFetching: isLoading,
+        }}
+      />
 
       <OrderDrawer order={active} onClose={() => setActive(null)} />
     </>
