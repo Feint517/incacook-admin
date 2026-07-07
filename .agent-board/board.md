@@ -3,7 +3,7 @@
 Project: IncaCook Admin
 Current focus: Replace mock data with the real IncaCook backend admin surface (/v1/admin/*), behind admin/moderator auth
 Current milestone: Phase 1 — Wire admin panel to /v1/admin backend
-Updated: 2026-07-06
+Updated: 2026-07-07
 
 ## Columns
 
@@ -28,10 +28,10 @@ Updated: 2026-07-06
 | TASK-008 | Geography map → /v1/admin/dashboard/cities | Backlog | Agent | P2 |
 | TASK-009 | KYC review queue → /v1/admin/kyc/documents (NEW page) | Done | Agent | P0 |
 | TASK-010 | Disputes management → /v1/admin/disputes (NEW page) | Done | Agent | P0 |
-| TASK-011 | Catalog claims → /v1/admin/catalog-claims (NEW page) | Backlog | Agent | P1 |
+| TASK-011 | Catalog claims → /v1/admin/catalog-claims (NEW page) | In Progress | Agent | P1 |
 | TASK-012 | Supply catalog products CRUD + orders → /v1/admin/catalog/* | Backlog | Agent | P2 |
-| TASK-013 | Broadcast notifications → /v1/admin/notifications/send | Backlog | Agent | P2 |
-| TASK-014 | Legal documents management → /v1/admin/legal-documents | Backlog | Agent | P2 |
+| TASK-013 | Broadcast notifications → /v1/admin/notifications/send | In Progress | Agent | P2 |
+| TASK-014 | Legal documents management → /v1/admin/legal-documents | In Progress | Agent | P2 |
 | TASK-015 | Orders page — needs an admin orders endpoint (backend dependency) | Blocked | Agent | P2 |
 | TASK-016 | Sellers page — needs an admin sellers endpoint (backend dependency) | Blocked | Agent | P2 |
 | TASK-017 | Listings page — needs an admin listings endpoint (backend dependency) | Blocked | Agent | P2 |

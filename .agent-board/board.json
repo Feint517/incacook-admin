@@ -2,7 +2,7 @@
   "project": "IncaCook Admin",
   "currentFocus": "Replace mock data with the real IncaCook backend admin surface (/v1/admin/*), behind admin/moderator auth",
   "currentMilestone": "Phase 1 — Wire admin panel to /v1/admin backend",
-  "updated": "2026-07-06",
+  "updated": "2026-07-07",
   "recommendedStart": "TASK-001",
   "columns": [
     "Backlog",
@@ -129,7 +129,7 @@
     {
       "id": "TASK-011",
       "title": "Catalog claims → /v1/admin/catalog-claims (NEW page)",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P1",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-011.md",
@@ -153,7 +153,7 @@
     {
       "id": "TASK-013",
       "title": "Broadcast notifications → /v1/admin/notifications/send",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-013.md",
@@ -164,7 +164,7 @@
     {
       "id": "TASK-014",
       "title": "Legal documents management → /v1/admin/legal-documents",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-014.md",

@@ -1,6 +1,6 @@
 # TASK-011 — Catalog claims → /v1/admin/catalog-claims (NEW page)
 
-Status: Backlog
+Status: In Progress
 Priority: P1
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend
