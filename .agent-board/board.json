@@ -129,7 +129,7 @@
     {
       "id": "TASK-011",
       "title": "Catalog claims → /v1/admin/catalog-claims (NEW page)",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P1",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-011.md",
@@ -153,7 +153,7 @@
     {
       "id": "TASK-013",
       "title": "Broadcast notifications → /v1/admin/notifications/send",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-013.md",
@@ -164,7 +164,7 @@
     {
       "id": "TASK-014",
       "title": "Legal documents management → /v1/admin/legal-documents",
-      "status": "In Progress",
+      "status": "Done",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-014.md",
