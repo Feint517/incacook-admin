@@ -223,7 +223,7 @@
     {
       "id": "TASK-019",
       "title": "Remove mock-data generator and delete dead mock leaks",
-      "status": "Backlog",
+      "status": "Done",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-019.md",

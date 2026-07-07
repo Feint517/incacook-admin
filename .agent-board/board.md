@@ -36,7 +36,7 @@ Updated: 2026-07-07
 | TASK-016 | Sellers page — needs an admin sellers endpoint (backend dependency) | Done | Agent | P2 |
 | TASK-017 | Listings page — needs an admin listings endpoint (backend dependency) | Done | Agent | P2 |
 | TASK-018 | Env config, API base URL, and README | Done | Agent | P1 |
-| TASK-019 | Remove mock-data generator and delete dead mock leaks | Backlog | Agent | P2 |
+| TASK-019 | Remove mock-data generator and delete dead mock leaks | Done | Agent | P2 |
 | TASK-020 | CI quality gates (typecheck + lint + build) | Done | Agent | P2 |
 
 ## Recommended Start
