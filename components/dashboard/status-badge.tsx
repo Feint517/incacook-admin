@@ -1,29 +1,11 @@
 import { Badge } from "@/components/ui/badge";
-import type { OrderStatus, UserStatus, ListingStatus, ReportStatus } from "@/lib/mock-data/types";
 
-const ORDER_LABEL: Record<OrderStatus, string> = {
-  new: "Nouvelle",
-  accepted: "Acceptée",
-  preparing: "En préparation",
-  ready: "Prête",
-  delivering: "En livraison",
-  completed: "Livrée",
-  cancelled: "Annulée",
-};
+// Shared status pills still consumed by wired pages. Type unions are declared
+// locally (the old lib/mock-data layer is gone). Pages whose real backend enum
+// doesn't match these build their own local badges on the `Badge` primitive.
 
-const ORDER_VARIANT: Record<OrderStatus, "info" | "primary" | "warning" | "success" | "error" | "neutral"> = {
-  new: "info",
-  accepted: "info",
-  preparing: "warning",
-  ready: "primary",
-  delivering: "primary",
-  completed: "success",
-  cancelled: "error",
-};
-
-export function OrderStatusBadge({ status }: { status: OrderStatus }) {
-  return <Badge variant={ORDER_VARIANT[status]}>{ORDER_LABEL[status]}</Badge>;
-}
+export type UserStatus = "verified" | "pending" | "suspended";
+export type ListingStatus = "active" | "sold-out" | "expired" | "paused";
 
 const USER_LABEL: Record<UserStatus, string> = {
   verified: "Vérifié",
@@ -57,20 +39,4 @@ const LISTING_VARIANT: Record<ListingStatus, "success" | "neutral" | "error" | "
 
 export function ListingStatusBadge({ status }: { status: ListingStatus }) {
   return <Badge variant={LISTING_VARIANT[status]}>{LISTING_LABEL[status]}</Badge>;
-}
-
-const REPORT_LABEL: Record<ReportStatus, string> = {
-  open: "Ouvert",
-  review: "En revue",
-  resolved: "Résolu",
-};
-
-const REPORT_VARIANT: Record<ReportStatus, "error" | "warning" | "success"> = {
-  open: "error",
-  review: "warning",
-  resolved: "success",
-};
-
-export function ReportStatusBadge({ status }: { status: ReportStatus }) {
-  return <Badge variant={REPORT_VARIANT[status]}>{REPORT_LABEL[status]}</Badge>;
 }
