@@ -1,4 +1,16 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+// Load .env.local into process.env (E2E_* creds + API base) so `pnpm e2e`
+// works without exporting them. No dependency; existing env wins.
+const envLocal = resolve(process.cwd(), ".env.local");
+if (existsSync(envLocal)) {
+  for (const line of readFileSync(envLocal, "utf8").split("\n")) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (m && !(m[1] in process.env)) process.env[m[1]] = m[2];
+  }
+}
 
 /**
  * Playwright E2E config for the IncaCook admin panel.
