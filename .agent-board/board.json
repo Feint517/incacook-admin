@@ -246,6 +246,18 @@
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-020.md",
       "blockedBy": []
+    },
+    {
+      "id": "TASK-021",
+      "title": "Driver/delivery zones management → /v1/zones",
+      "status": "Done",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-021.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
     }
   ]
 }
