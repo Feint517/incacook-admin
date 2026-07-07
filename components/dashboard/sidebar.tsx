@@ -15,6 +15,7 @@ import {
   PackageOpen,
   Boxes,
   MapPinned,
+  Map,
   Megaphone,
   FileText,
   Sun,
@@ -38,6 +39,7 @@ const NAV = [
   { href: "/catalog-claims", label: "Réclamations catalogue", icon: PackageOpen },
   { href: "/catalog", label: "Catalogue B2B", icon: Boxes },
   { href: "/geography", label: "Carte", icon: MapPinned },
+  { href: "/zones", label: "Zones de livraison", icon: Map },
   { href: "/notifications", label: "Notifications", icon: Megaphone },
   { href: "/legal", label: "Documents légaux", icon: FileText },
 ];

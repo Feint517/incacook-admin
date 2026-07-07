@@ -41,7 +41,7 @@ test.describe("authenticated admin flows", () => {
     await expect(page.getByText(/réf\.|internal server|500/i)).toHaveCount(0, { timeout: 30_000 });
   });
 
-  for (const route of ["/orders", "/sellers", "/listings", "/catalog", "/legal", "/geography"]) {
+  for (const route of ["/orders", "/sellers", "/listings", "/catalog", "/zones", "/legal", "/geography"]) {
     test(`${route} renders without error`, async ({ page }) => {
       await page.goto(route);
       await expect(page.locator("main")).toBeVisible({ timeout: 30_000 });
