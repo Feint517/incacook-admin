@@ -32,9 +32,9 @@ Updated: 2026-07-07
 | TASK-012 | Supply catalog products CRUD + orders → /v1/admin/catalog/* | Done | Agent | P2 |
 | TASK-013 | Broadcast notifications → /v1/admin/notifications/send | Done | Agent | P2 |
 | TASK-014 | Legal documents management → /v1/admin/legal-documents | Done | Agent | P2 |
-| TASK-015 | Orders page — needs an admin orders endpoint (backend dependency) | Blocked | Agent | P2 |
-| TASK-016 | Sellers page — needs an admin sellers endpoint (backend dependency) | Blocked | Agent | P2 |
-| TASK-017 | Listings page — needs an admin listings endpoint (backend dependency) | Blocked | Agent | P2 |
+| TASK-015 | Orders page — needs an admin orders endpoint (backend dependency) | Backlog | Agent | P2 |
+| TASK-016 | Sellers page — needs an admin sellers endpoint (backend dependency) | Backlog | Agent | P2 |
+| TASK-017 | Listings page — needs an admin listings endpoint (backend dependency) | Backlog | Agent | P2 |
 | TASK-018 | Env config, API base URL, and README | Done | Agent | P1 |
 | TASK-019 | Remove mock-data generator and delete dead mock leaks | Backlog | Agent | P2 |
 | TASK-020 | CI quality gates (typecheck + lint + build) | Done | Agent | P2 |

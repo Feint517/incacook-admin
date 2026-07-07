@@ -176,7 +176,7 @@
     {
       "id": "TASK-015",
       "title": "Orders page — needs an admin orders endpoint (backend dependency)",
-      "status": "Blocked",
+      "status": "Backlog",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-015.md",
@@ -188,7 +188,7 @@
     {
       "id": "TASK-016",
       "title": "Sellers page — needs an admin sellers endpoint (backend dependency)",
-      "status": "Blocked",
+      "status": "Backlog",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-016.md",
@@ -200,7 +200,7 @@
     {
       "id": "TASK-017",
       "title": "Listings page — needs an admin listings endpoint (backend dependency)",
-      "status": "Blocked",
+      "status": "Backlog",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-017.md",

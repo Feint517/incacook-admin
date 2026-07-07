@@ -1,6 +1,6 @@
 # TASK-017 — Listings page — needs an admin listings endpoint (backend dependency)
 
-Status: Blocked
+Status: Backlog
 Priority: P2
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend
