@@ -40,4 +40,12 @@ test.describe("authenticated admin flows", () => {
     await expect(page.locator("main")).toBeVisible();
     await expect(page.getByText(/réf\.|internal server|500/i)).toHaveCount(0, { timeout: 30_000 });
   });
+
+  for (const route of ["/orders", "/sellers", "/listings", "/catalog", "/legal", "/geography"]) {
+    test(`${route} renders without error`, async ({ page }) => {
+      await page.goto(route);
+      await expect(page.locator("main")).toBeVisible();
+      await expect(page.getByText(/internal server|500 |unauthor/i)).toHaveCount(0, { timeout: 30_000 });
+    });
+  }
 });
