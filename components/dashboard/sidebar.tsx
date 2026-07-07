@@ -13,6 +13,7 @@ import {
   Scale,
   ShieldCheck,
   PackageOpen,
+  Boxes,
   MapPinned,
   Megaphone,
   FileText,
@@ -35,6 +36,7 @@ const NAV = [
   { href: "/disputes", label: "Litiges", icon: Scale },
   { href: "/kyc", label: "Vérifications KYC", icon: ShieldCheck },
   { href: "/catalog-claims", label: "Réclamations catalogue", icon: PackageOpen },
+  { href: "/catalog", label: "Catalogue B2B", icon: Boxes },
   { href: "/geography", label: "Carte", icon: MapPinned },
   { href: "/notifications", label: "Notifications", icon: Megaphone },
   { href: "/legal", label: "Documents légaux", icon: FileText },
@@ -74,7 +76,10 @@ export function Sidebar() {
       <nav className="flex flex-col items-center gap-1.5">
         {NAV.map((item) => {
           const Icon = item.icon;
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const active =
+            item.href === "/"
+              ? pathname === "/"
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
