@@ -94,7 +94,7 @@
     {
       "id": "TASK-008",
       "title": "Geography map → /v1/admin/dashboard/cities",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-008.md",
@@ -141,7 +141,7 @@
     {
       "id": "TASK-012",
       "title": "Supply catalog products CRUD + orders → /v1/admin/catalog/*",
-      "status": "Backlog",
+      "status": "In Progress",
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-012.md",

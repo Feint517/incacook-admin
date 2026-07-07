@@ -25,11 +25,11 @@ Updated: 2026-07-07
 | TASK-005 | Users list + detail → /v1/admin/users | Done | Agent | P0 |
 | TASK-006 | User moderation — strikes + suspend/unsuspend | Done | Agent | P1 |
 | TASK-007 | Reports moderation → /v1/admin/reports | Done | Agent | P1 |
-| TASK-008 | Geography map → /v1/admin/dashboard/cities | Backlog | Agent | P2 |
+| TASK-008 | Geography map → /v1/admin/dashboard/cities | In Progress | Agent | P2 |
 | TASK-009 | KYC review queue → /v1/admin/kyc/documents (NEW page) | Done | Agent | P0 |
 | TASK-010 | Disputes management → /v1/admin/disputes (NEW page) | Done | Agent | P0 |
 | TASK-011 | Catalog claims → /v1/admin/catalog-claims (NEW page) | Done | Agent | P1 |
-| TASK-012 | Supply catalog products CRUD + orders → /v1/admin/catalog/* | Backlog | Agent | P2 |
+| TASK-012 | Supply catalog products CRUD + orders → /v1/admin/catalog/* | In Progress | Agent | P2 |
 | TASK-013 | Broadcast notifications → /v1/admin/notifications/send | Done | Agent | P2 |
 | TASK-014 | Legal documents management → /v1/admin/legal-documents | Done | Agent | P2 |
 | TASK-015 | Orders page — needs an admin orders endpoint (backend dependency) | Blocked | Agent | P2 |
