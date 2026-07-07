@@ -34,11 +34,14 @@ export default defineConfig({
     },
     // Log in once, save session.
     { name: "setup", testMatch: /auth\.setup\.ts/ },
-    // Authed dashboard flows — reuse the saved session.
+    // Authed dashboard flows — reuse the saved session. Run serially: a single
+    // `next start` dev server + one backend flakes under many concurrent page
+    // loads (route-chunk / cold-DB 500s), so parallel here is a false negative.
     {
       name: "authed",
       use: { ...devices["Desktop Chrome"] },
       testMatch: /authed\.spec\.ts/,
+      fullyParallel: false,
       dependencies: ["setup"],
     },
   ],
