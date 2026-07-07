@@ -1,6 +1,6 @@
 # TASK-008 — Geography map → /v1/admin/dashboard/cities
 
-Status: In Progress
+Status: Done
 Priority: P2
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend

@@ -1,6 +1,6 @@
 # TASK-012 — Supply catalog products CRUD + orders → /v1/admin/catalog/*
 
-Status: In Progress
+Status: Done
 Priority: P2
 Project: IncaCook Admin
 Milestone: Phase 1 — Wire admin panel to /v1/admin backend
