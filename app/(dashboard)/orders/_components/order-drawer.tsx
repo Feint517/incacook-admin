@@ -2,9 +2,10 @@
 
 import { Drawer, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Truck, Store, MapPin, Calendar, Package } from "lucide-react";
+import { Truck, Store, MapPin, Calendar, Package, Wallet } from "lucide-react";
 import { formatEur, formatDateTimeFr } from "@/lib/utils";
 import { cn } from "@/lib/utils";
+import { useAdminQuery } from "@/lib/query";
 import {
   cityLabel,
   OrderCategoryBadge,
@@ -14,6 +15,29 @@ import {
   type AdminOrder,
   type OrderStatus,
 } from "./order-model";
+
+/** Money split + wallet ledger from GET /v1/admin/orders/:id/financials. */
+interface WalletEntry {
+  userId: string;
+  type: string;
+  amountCents: number;
+  status: string;
+  withdrawalId: string | null;
+  transferId: string | null;
+}
+interface OrderFinancials {
+  order: {
+    id: string;
+    status: string;
+    buyerTotalCents: number | null;
+    subtotalCents: number | null;
+    fulfillmentFeeCents: number | null;
+    commissionCents: number | null;
+    sellerEarningsCents: number | null;
+    driverEarningsCents?: number | null;
+  };
+  walletEntries: WalletEntry[];
+}
 
 /** Happy-path progression, in order. Rank drives which steps read as "done". */
 const STATUS_RANK: Record<OrderStatus, number> = {
@@ -52,6 +76,12 @@ export function OrderDrawer({
   order: AdminOrder | null;
   onClose: () => void;
 }) {
+  // Money split is fetched lazily when the drawer opens (admin-only endpoint).
+  const financials = useAdminQuery<OrderFinancials>({
+    path: order ? `/admin/orders/${order.id}/financials` : "/admin/orders/none/financials",
+    enabled: !!order,
+  });
+
   if (!order) return null;
 
   const rank = STATUS_RANK[order.status];
@@ -158,14 +188,84 @@ export function OrderDrawer({
           />
         </div>
 
-        <div className="flex items-center justify-between rounded-md border border-outline-variant bg-surface-container-low p-3 text-[13px]">
-          <span className="text-on-surface-variant">Total payé</span>
-          <span className="font-semibold tabular-nums">
-            {formatEur(toEuros(order.totalCents), { cents: true })}
-          </span>
+        <Separator />
+
+        <div>
+          <h4 className="mb-2 flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-on-surface-variant">
+            <Wallet className="h-3.5 w-3.5" /> Répartition financière
+          </h4>
+          {financials.isLoading ? (
+            <div className="h-24 animate-pulse rounded-md bg-surface-container-low" />
+          ) : financials.data ? (
+            <div className="rounded-md border border-outline-variant bg-surface-container-low p-3 text-[13px]">
+              <Money label="Sous-total" cents={financials.data.order.subtotalCents} />
+              <Money label="Frais de livraison" cents={financials.data.order.fulfillmentFeeCents} />
+              <Money label="Commission plateforme" cents={financials.data.order.commissionCents} negative />
+              <Money label="Revenu vendeur" cents={financials.data.order.sellerEarningsCents} />
+              {financials.data.order.driverEarningsCents != null && (
+                <Money label="Revenu livreur" cents={financials.data.order.driverEarningsCents} />
+              )}
+              <Separator className="my-2" />
+              <Money label="Total payé" cents={financials.data.order.buyerTotalCents ?? order.totalCents} strong />
+
+              {financials.data.walletEntries.length > 0 && (
+                <div className="mt-3">
+                  <p className="mb-1.5 text-[10px] uppercase tracking-wider text-on-surface-variant">
+                    Écritures portefeuille
+                  </p>
+                  <ul className="space-y-1">
+                    {financials.data.walletEntries.map((e, i) => (
+                      <li key={i} className="flex items-center justify-between gap-2 text-[12px]">
+                        <span className="truncate text-on-surface-variant">
+                          {e.type}
+                          <span className="ml-1 text-[10px] opacity-70">{e.status}</span>
+                        </span>
+                        <span className="tabular-nums">
+                          {formatEur(toEuros(e.amountCents), { cents: true })}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : (
+            // Financials unavailable (e.g. pre-payment order) — fall back to the total.
+            <div className="flex items-center justify-between rounded-md border border-outline-variant bg-surface-container-low p-3 text-[13px]">
+              <span className="text-on-surface-variant">Total payé</span>
+              <span className="font-semibold tabular-nums">
+                {formatEur(toEuros(order.totalCents), { cents: true })}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </Drawer>
+  );
+}
+
+function Money({
+  label,
+  cents,
+  negative,
+  strong,
+}: {
+  label: string;
+  cents: number | null;
+  negative?: boolean;
+  strong?: boolean;
+}) {
+  if (cents == null) return null;
+  return (
+    <div className="flex items-center justify-between py-0.5">
+      <span className={cn("text-on-surface-variant", strong && "font-medium text-on-surface")}>
+        {label}
+      </span>
+      <span className={cn("tabular-nums", strong && "font-semibold", negative && "text-on-surface-variant")}>
+        {negative ? "−" : ""}
+        {formatEur(toEuros(cents), { cents: true })}
+      </span>
+    </div>
   );
 }
 
