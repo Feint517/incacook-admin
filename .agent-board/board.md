@@ -3,7 +3,7 @@
 Project: IncaCook Admin
 Current focus: Replace mock data with the real IncaCook backend admin surface (/v1/admin/*), behind admin/moderator auth
 Current milestone: Phase 1 — Wire admin panel to /v1/admin backend
-Updated: 2026-07-07
+Updated: 2026-07-08
 
 ## Columns
 
@@ -39,6 +39,7 @@ Updated: 2026-07-07
 | TASK-019 | Remove mock-data generator and delete dead mock leaks | Done | Agent | P2 |
 | TASK-020 | CI quality gates (typecheck + lint + build) | Done | Agent | P2 |
 | TASK-021 | Driver/delivery zones management → /v1/zones | Done | Agent | P2 |
+| TASK-022 | Drivers oversight → /v1/admin/drivers | Done | Agent | P2 |
 
 ## Recommended Start
 

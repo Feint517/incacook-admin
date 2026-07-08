@@ -2,7 +2,7 @@
   "project": "IncaCook Admin",
   "currentFocus": "Replace mock data with the real IncaCook backend admin surface (/v1/admin/*), behind admin/moderator auth",
   "currentMilestone": "Phase 1 — Wire admin panel to /v1/admin backend",
-  "updated": "2026-07-07",
+  "updated": "2026-07-08",
   "recommendedStart": "TASK-001",
   "columns": [
     "Backlog",
@@ -254,6 +254,18 @@
       "priority": "P2",
       "owner": "Agent",
       "path": ".agent-board/tasks/TASK-021.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-022",
+      "title": "Drivers oversight → /v1/admin/drivers",
+      "status": "Done",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-022.md",
       "blockedBy": [
         "TASK-002",
         "TASK-003"
