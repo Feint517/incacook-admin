@@ -270,6 +270,30 @@
         "TASK-002",
         "TASK-003"
       ]
+    },
+    {
+      "id": "TASK-023",
+      "title": "Seller subscriptions oversight → /v1/admin/subscriptions",
+      "status": "Done",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-023.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
+    },
+    {
+      "id": "TASK-024",
+      "title": "Wallet/payout oversight → /v1/admin/wallets + /withdrawals",
+      "status": "Done",
+      "priority": "P2",
+      "owner": "Agent",
+      "path": ".agent-board/tasks/TASK-024.md",
+      "blockedBy": [
+        "TASK-002",
+        "TASK-003"
+      ]
     }
   ]
 }

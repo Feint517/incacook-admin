@@ -40,6 +40,8 @@ Updated: 2026-07-08
 | TASK-020 | CI quality gates (typecheck + lint + build) | Done | Agent | P2 |
 | TASK-021 | Driver/delivery zones management → /v1/zones | Done | Agent | P2 |
 | TASK-022 | Drivers oversight → /v1/admin/drivers | Done | Agent | P2 |
+| TASK-023 | Seller subscriptions oversight → /v1/admin/subscriptions | Done | Agent | P2 |
+| TASK-024 | Wallet/payout oversight → /v1/admin/wallets + /withdrawals | Done | Agent | P2 |
 
 ## Recommended Start
 
