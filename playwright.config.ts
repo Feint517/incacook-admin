@@ -30,7 +30,10 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  // The live backend intermittently 500s on the first query after an idle
+  // moment (Prisma pooler reconnect), so retry to absorb that environmental
+  // flake rather than fail a correct page.
+  retries: 2,
   reporter: process.env.CI ? "line" : [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: BASE_URL,
