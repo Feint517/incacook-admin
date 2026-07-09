@@ -20,3 +20,8 @@ node_modules
 
 # Playwright saved auth sessions (contain tokens)
 /e2e/.auth
+.env*
+
+# macOS
+.DS_Store
+**/.DS_Store
