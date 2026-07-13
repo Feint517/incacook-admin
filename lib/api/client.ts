@@ -18,7 +18,7 @@ import {
 } from "./types";
 
 /** Production Railway fallback, used when the env var is unset. */
-const DEFAULT_BASE_URL = "https://incacook-api-production.up.railway.app";
+const DEFAULT_BASE_URL = "https://incacook-api-production-146b.up.railway.app";
 
 /** All endpoints are mounted under `/v1`. */
 const API_PREFIX = "/v1";
