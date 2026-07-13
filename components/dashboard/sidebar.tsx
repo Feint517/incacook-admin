@@ -21,6 +21,7 @@ import {
   FileText,
   CreditCard,
   Wallet,
+  Settings,
   Sun,
   Moon,
   LogOut,
@@ -48,6 +49,7 @@ const NAV = [
   { href: "/zones", label: "Zones de livraison", icon: Map },
   { href: "/notifications", label: "Notifications", icon: Megaphone },
   { href: "/legal", label: "Documents légaux", icon: FileText },
+  { href: "/settings", label: "Paramètres", icon: Settings },
 ];
 
 export function Sidebar() {
