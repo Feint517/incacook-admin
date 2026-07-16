@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatEur, formatDateTimeFr } from "@/lib/utils";
+import { formatEurFromCents, formatDateTimeFr } from "@/lib/utils";
 import {
   ROLE_LABEL,
   WITHDRAWAL_STATUS_LABEL,
@@ -28,7 +28,7 @@ import {
 
 const PAGE_SIZE = 20;
 const ALL = "ALL";
-const eur = (cents: number) => formatEur(cents / 100, { cents: true });
+const eur = formatEurFromCents;
 
 export function PayoutsClient() {
   return (

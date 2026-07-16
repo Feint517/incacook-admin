@@ -12,14 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { formatEur, relativeTimeFr } from "@/lib/utils";
+import { formatEurFromCents, relativeTimeFr } from "@/lib/utils";
 import { OrderDrawer } from "./order-drawer";
 import {
   cityLabel,
   ORDER_STATUS_FILTERS,
   OrderCategoryBadge,
   OrderStatusBadge,
-  toEuros,
   type AdminOrder,
   type AdminOrdersListResponse,
   type OrderStatus,
@@ -110,7 +109,7 @@ export function OrdersClient() {
       align: "right",
       cell: (o) => (
         <span className="font-semibold tabular-nums">
-          {formatEur(toEuros(o.totalCents), { cents: true })}
+          {formatEurFromCents(o.totalCents)}
         </span>
       ),
       width: "100px",

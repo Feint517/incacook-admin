@@ -153,11 +153,6 @@ export function OrderCategoryBadge({ category }: { category: OrderCategory }) {
 
 // --- Helpers -----------------------------------------------------------------
 
-/** Euros from integer cents. */
-export function toEuros(totalCents: number): number {
-  return totalCents / 100;
-}
-
 /**
  * City to display. `city` is `null` for pickup orders (no dropoff address), so
  * fall back to "Retrait" there and "—" otherwise.

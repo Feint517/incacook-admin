@@ -14,7 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatDateTimeFr, formatEur } from "@/lib/utils";
+import { formatDateTimeFr, formatEurFromCents } from "@/lib/utils";
 import {
   CLAIM_ACTIONS,
   STATUS_VARIANT,
@@ -173,7 +173,7 @@ export function CatalogClaimDrawer({ claimId, onClose, onActed }: Props) {
                   <InfoRow
                     icon={FileText}
                     label="Montant remboursé"
-                    value={formatEur(data.refundAmountCents, { cents: true })}
+                    value={formatEurFromCents(data.refundAmountCents)}
                   />
                 )}
               </div>
@@ -197,7 +197,7 @@ export function CatalogClaimDrawer({ claimId, onClose, onActed }: Props) {
                           {it.quantity} × {it.nameSnapshot}
                         </span>
                         <span className="shrink-0 font-mono">
-                          {formatEur(it.lineTotalCents, { cents: true })}
+                          {formatEurFromCents(it.lineTotalCents)}
                         </span>
                       </div>
                     ))}
@@ -206,7 +206,7 @@ export function CatalogClaimDrawer({ claimId, onClose, onActed }: Props) {
                   <div className="flex items-center justify-between text-[12px]">
                     <span className="text-on-surface-variant">Total</span>
                     <span className="font-mono font-semibold text-on-surface">
-                      {formatEur(data.order.totalCents, { cents: true })}
+                      {formatEurFromCents(data.order.totalCents)}
                     </span>
                   </div>
                 </div>
@@ -295,7 +295,7 @@ export function CatalogClaimDrawer({ claimId, onClose, onActed }: Props) {
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder={
                       data?.order
-                        ? formatEur(data.order.totalCents, { cents: true })
+                        ? formatEurFromCents(data.order.totalCents)
                         : "Total de la commande"
                     }
                     className="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"

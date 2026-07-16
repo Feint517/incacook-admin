@@ -21,6 +21,14 @@ export function formatEur(value: number, options: { cents?: boolean } = {}) {
   return options.cents ? eurFmtCents.format(value) : eurFmt.format(value);
 }
 
+/**
+ * Formats an integer cent amount as euros ("2500" → "25,00 €"). Use this for
+ * every `*Cents` field — `formatEur` is euro-denominated and does NOT convert.
+ */
+export function formatEurFromCents(cents: number) {
+  return eurFmtCents.format(cents / 100);
+}
+
 const numFmt = new Intl.NumberFormat("fr-FR");
 export function formatNum(value: number) {
   return numFmt.format(value);
