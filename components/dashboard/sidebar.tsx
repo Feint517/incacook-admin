@@ -74,16 +74,24 @@ export function Sidebar() {
   }
 
   return (
-    <aside
-      className="frost fixed left-3 top-1/2 z-40 flex w-[68px] -translate-y-1/2 flex-col items-center gap-1.5 rounded-2xl border border-outline-variant/40 p-2.5 shadow-lg shadow-black/5"
-    >
-      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-surface-container-high">
-        <Image src="/app_logo.png" alt="IncaCook" width={36} height={36} className="object-contain" />
-      </div>
+    <aside className="frost fixed inset-y-0 left-0 z-40 flex w-64 flex-col gap-1.5 border-r border-outline-variant/40 p-3">
+      <Link
+        href="/"
+        title="Retour à l'accueil"
+        className="flex items-center gap-3 rounded-2xl p-2 transition-colors hover:bg-surface-container-high"
+      >
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-surface-container-high">
+          <Image src="/app_logo.png" alt="IncaCook" width={32} height={32} className="object-contain" />
+        </div>
+        <div className="flex flex-col leading-tight">
+          <span className="text-sm font-semibold text-on-surface">IncaCook</span>
+          <span className="text-[11px] text-on-surface-variant">Administration</span>
+        </div>
+      </Link>
 
-      <div className="my-0.5 h-px w-8 bg-outline-variant" />
+      <div className="my-0.5 h-px w-full bg-outline-variant" />
 
-      <nav className="flex flex-col items-center gap-1.5">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
         {NAV.map((item) => {
           const Icon = item.icon;
           const active =
@@ -94,45 +102,39 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              title={item.label}
               className={cn(
-                "group relative flex h-11 w-11 items-center justify-center rounded-2xl transition-colors",
+                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                 active
                   ? "bg-primary text-primary-foreground"
                   : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface",
               )}
             >
-              <Icon className="h-5 w-5" />
-              <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-md border border-outline-variant bg-surface-container-high px-2 py-1 text-[11px] font-medium opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-                {item.label}
-              </span>
+              <Icon className="h-[18px] w-[18px] shrink-0" />
+              <span className="truncate">{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="my-0.5 h-px w-8 bg-outline-variant" />
+      <div className="my-0.5 h-px w-full bg-outline-variant" />
 
       {mounted && (
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          title="Basculer le thème"
-          className="flex h-11 w-11 items-center justify-center rounded-2xl text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
         >
-          {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          {theme === "dark" ? <Sun className="h-[18px] w-[18px] shrink-0" /> : <Moon className="h-[18px] w-[18px] shrink-0" />}
+          <span>{theme === "dark" ? "Mode clair" : "Mode sombre"}</span>
         </button>
       )}
 
       <button
         onClick={handleSignOut}
         disabled={signingOut}
-        title="Déconnexion"
-        className="group relative flex h-11 w-11 items-center justify-center rounded-2xl bg-error/10 text-error transition-colors hover:bg-error hover:text-white disabled:pointer-events-none disabled:opacity-50"
+        className="flex items-center gap-3 rounded-xl bg-error/10 px-3 py-2.5 text-sm font-medium text-error transition-colors hover:bg-error hover:text-white disabled:pointer-events-none disabled:opacity-50"
       >
-        <LogOut className="h-5 w-5" />
-        <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap rounded-md border border-outline-variant bg-surface-container-high px-2 py-1 text-[11px] font-medium text-on-surface opacity-0 shadow-md transition-opacity group-hover:opacity-100">
-          Déconnexion
-        </span>
+        <LogOut className="h-[18px] w-[18px] shrink-0" />
+        <span>Déconnexion</span>
       </button>
     </aside>
   );

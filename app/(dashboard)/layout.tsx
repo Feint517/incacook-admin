@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <AuthGuard>
       <div className="min-h-screen bg-background text-on-surface">
         <Sidebar />
-        <main className="pl-[92px]">{children}</main>
+        <main className="pl-64">{children}</main>
       </div>
     </AuthGuard>
   );
