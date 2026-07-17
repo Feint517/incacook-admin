@@ -14,7 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatDateTimeFr, formatEur } from "@/lib/utils";
+import { formatDateTimeFr, formatEurFromCents } from "@/lib/utils";
 import {
   DISPUTE_ACTIONS,
   STATUS_VARIANT,
@@ -160,7 +160,7 @@ export function DisputeDrawer({ disputeId, onClose, onActed }: Props) {
                   <InfoRow
                     icon={FileText}
                     label="Montant remboursé"
-                    value={formatEur(data.refundAmountCents, { cents: true })}
+                    value={formatEurFromCents(data.refundAmountCents)}
                   />
                 )}
                 {data.stripeDisputeId && (

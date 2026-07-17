@@ -4,7 +4,7 @@ import Image from "next/image";
 import { AlertTriangle, ImageOff, ShoppingBag, User } from "lucide-react";
 import { Drawer } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { formatEur, formatNum, formatDateTimeFr } from "@/lib/utils";
+import { formatEurFromCents, formatNum, formatDateTimeFr } from "@/lib/utils";
 import {
   CategoryChip,
   CuisineChip,
@@ -68,7 +68,7 @@ export function ListingDrawer({
         </div>
 
         <div className="grid grid-cols-3 gap-2">
-          <Mini label="Prix" value={formatEur(listing.priceCents / 100, { cents: true })} />
+          <Mini label="Prix" value={formatEurFromCents(listing.priceCents)} />
           <Mini
             label="Portions restantes"
             value={listing.portionsLeft != null ? formatNum(listing.portionsLeft) : "—"}
