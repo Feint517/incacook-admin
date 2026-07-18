@@ -14,6 +14,11 @@ export interface AdminDriver {
   lastSeenAt: string | null;
   averageRating: number | null;
   totalDeliveries: number;
+  // Stripe Connect payout readiness (issue #12) — the granular DEC-4 triad,
+  // mirrored on the seller list.
+  stripeDetailsSubmitted: boolean;
+  stripeChargesEnabled: boolean;
+  stripePayoutsEnabled: boolean;
   stripeOnboardingCompleted: boolean;
   zones: string[];
   isSuspended: boolean;

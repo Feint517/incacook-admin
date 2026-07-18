@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bike, Star, Package, MapPin, CreditCard } from "lucide-react";
 import { formatDateFr, formatDateTimeFr, formatNum } from "@/lib/utils";
+import { ConnectReadinessBadge } from "@/components/dashboard/status-badge";
 import {
   DriverStatus,
   KycStatusBadge,
@@ -50,7 +51,16 @@ export function DriverDrawer({
           <Stat icon={<Bike className="h-4 w-4" />} label="Véhicule" value={driver.vehicleType ? VEHICLE_LABEL[driver.vehicleType] : "—"} />
           <Stat icon={<Package className="h-4 w-4" />} label="Livraisons" value={formatNum(driver.totalDeliveries)} />
           <Stat icon={<Star className="h-4 w-4" />} label="Note" value={driver.averageRating != null ? driver.averageRating.toFixed(1) : "—"} />
-          <Stat icon={<CreditCard className="h-4 w-4" />} label="Stripe Connect" value={driver.stripeOnboardingCompleted ? "Configuré" : "Non configuré"} />
+          <Stat
+            icon={<CreditCard className="h-4 w-4" />}
+            label="Stripe Connect"
+            value={
+              <ConnectReadinessBadge
+                stripeDetailsSubmitted={driver.stripeDetailsSubmitted}
+                stripePayoutsEnabled={driver.stripePayoutsEnabled}
+              />
+            }
+          />
         </div>
 
         <div className="rounded-md border border-outline-variant bg-surface-container-low p-3">
@@ -79,7 +89,15 @@ export function DriverDrawer({
   );
 }
 
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function Stat({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="rounded-md border border-outline-variant bg-surface-container-low p-2.5">
       <div className="flex items-center gap-1.5 text-on-surface-variant">
