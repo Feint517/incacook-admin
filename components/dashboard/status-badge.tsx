@@ -88,3 +88,18 @@ export function ConnectReadinessBadge({
     </Badge>
   );
 }
+
+/**
+ * `chargesEnabled` on its own — deliberately a separate, secondary badge
+ * from [ConnectReadinessBadge] rather than folded into it: DEC-4 excludes
+ * it from the payout-readiness gate, but issue #12 asks for the full
+ * detailsSubmitted/chargesEnabled/payoutsEnabled triad to be visible to an
+ * operator, not just the derived readiness state.
+ */
+export function ChargesEnabledBadge({ stripeChargesEnabled }: { stripeChargesEnabled: boolean }) {
+  return (
+    <Badge variant={stripeChargesEnabled ? "info" : "neutral"} size="sm">
+      {stripeChargesEnabled ? "Paiements activés" : "Paiements inactifs"}
+    </Badge>
+  );
+}

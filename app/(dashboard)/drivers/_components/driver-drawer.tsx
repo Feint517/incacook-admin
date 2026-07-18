@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Bike, Star, Package, MapPin, CreditCard } from "lucide-react";
 import { formatDateFr, formatDateTimeFr, formatNum } from "@/lib/utils";
-import { ConnectReadinessBadge } from "@/components/dashboard/status-badge";
+import { ConnectReadinessBadge, ChargesEnabledBadge } from "@/components/dashboard/status-badge";
 import {
   DriverStatus,
   KycStatusBadge,
@@ -55,10 +55,13 @@ export function DriverDrawer({
             icon={<CreditCard className="h-4 w-4" />}
             label="Stripe Connect"
             value={
-              <ConnectReadinessBadge
-                stripeDetailsSubmitted={driver.stripeDetailsSubmitted}
-                stripePayoutsEnabled={driver.stripePayoutsEnabled}
-              />
+              <div className="flex items-center gap-1.5">
+                <ConnectReadinessBadge
+                  stripeDetailsSubmitted={driver.stripeDetailsSubmitted}
+                  stripePayoutsEnabled={driver.stripePayoutsEnabled}
+                />
+                <ChargesEnabledBadge stripeChargesEnabled={driver.stripeChargesEnabled} />
+              </div>
             }
           />
         </div>

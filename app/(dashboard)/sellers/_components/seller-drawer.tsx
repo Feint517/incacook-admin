@@ -5,7 +5,7 @@ import { Drawer, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { formatEur, formatNum, formatDateFr } from "@/lib/utils";
-import { ConnectReadinessBadge } from "@/components/dashboard/status-badge";
+import { ConnectReadinessBadge, ChargesEnabledBadge } from "@/components/dashboard/status-badge";
 import {
   SellerCategoryBadge,
   SellerStatus,
@@ -94,10 +94,13 @@ export function SellerDrawer({
             <Row
               label="Stripe Connect"
               value={
-                <ConnectReadinessBadge
-                  stripeDetailsSubmitted={seller.stripeDetailsSubmitted}
-                  stripePayoutsEnabled={seller.stripePayoutsEnabled}
-                />
+                <div className="flex items-center gap-1.5">
+                  <ConnectReadinessBadge
+                    stripeDetailsSubmitted={seller.stripeDetailsSubmitted}
+                    stripePayoutsEnabled={seller.stripePayoutsEnabled}
+                  />
+                  <ChargesEnabledBadge stripeChargesEnabled={seller.stripeChargesEnabled} />
+                </div>
               }
             />
             <Row label="Identifiant" value={seller.id} mono />
