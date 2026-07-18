@@ -49,6 +49,11 @@ export interface AdminSeller {
   activeListings: number;
   subscriptionTier: SubscriptionTier;
   subscriptionStatus: SubscriptionStatus;
+  // Stripe Connect payout readiness (issue #12) — the granular DEC-4 triad.
+  stripeDetailsSubmitted: boolean;
+  stripeChargesEnabled: boolean;
+  stripePayoutsEnabled: boolean;
+  stripeOnboardingCompleted: boolean;
   isSuspended: boolean;
   createdAt: string;
 }

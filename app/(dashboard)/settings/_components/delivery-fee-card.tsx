@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DataTableError } from "@/components/dashboard/data-table-states";
-import { formatDateTimeFr, formatEur } from "@/lib/utils";
+import { formatDateTimeFr, formatEur, formatEurFromCents } from "@/lib/utils";
 
 /** Shape returned by `GET /v1/admin/settings/delivery-fee`. */
 interface DeliveryFeeSettings {
@@ -147,7 +147,7 @@ export function DeliveryFeeCard() {
                   </span>
                 </div>
                 <p className="text-[11px] text-on-surface-variant">
-                  Entre 0 € et {formatEur(MAX_CENTS / 100, { cents: true })}.
+                  Entre 0 € et {formatEurFromCents(MAX_CENTS)}.
                 </p>
               </div>
 

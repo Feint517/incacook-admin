@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatEur, formatNum } from "@/lib/utils";
+import { formatEurFromCents, formatNum } from "@/lib/utils";
 import { ListingDrawer } from "./listing-drawer";
 import {
   CategoryChip,
@@ -119,7 +119,7 @@ export function ListingsClient() {
       align: "right",
       cell: (l) => (
         <span className="text-[13px] tabular-nums text-on-surface">
-          {formatEur(l.priceCents / 100, { cents: true })}
+          {formatEurFromCents(l.priceCents)}
         </span>
       ),
       width: "100px",

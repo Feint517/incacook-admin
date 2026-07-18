@@ -5,6 +5,7 @@ import { Drawer, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { formatEur, formatNum, formatDateFr } from "@/lib/utils";
+import { ConnectReadinessBadge, ChargesEnabledBadge } from "@/components/dashboard/status-badge";
 import {
   SellerCategoryBadge,
   SellerStatus,
@@ -30,7 +31,9 @@ const SUB_STATUS_LABEL: Record<AdminSeller["subscriptionStatus"], string> = {
  * Seller detail drawer. Renders entirely from the list row — there is no
  * `GET /v1/admin/sellers/:id`, so no extra fetch. Fields the endpoint does not
  * expose (hygiene / quality / packaging scores, per-month sales, reviews) are
- * intentionally absent rather than fabricated.
+ * intentionally absent rather than fabricated. Stripe Connect readiness
+ * (issue #12) was one such absence until the backend added it — no longer
+ * missing.
  */
 export function SellerDrawer({
   seller,
@@ -88,6 +91,18 @@ export function SellerDrawer({
               label="Abonnement"
               value={SUB_STATUS_LABEL[seller.subscriptionStatus] ?? seller.subscriptionStatus}
             />
+            <Row
+              label="Stripe Connect"
+              value={
+                <div className="flex items-center gap-1.5">
+                  <ConnectReadinessBadge
+                    stripeDetailsSubmitted={seller.stripeDetailsSubmitted}
+                    stripePayoutsEnabled={seller.stripePayoutsEnabled}
+                  />
+                  <ChargesEnabledBadge stripeChargesEnabled={seller.stripeChargesEnabled} />
+                </div>
+              }
+            />
             <Row label="Identifiant" value={seller.id} mono />
           </div>
         </div>
@@ -127,7 +142,7 @@ function Row({
   mono,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   mono?: boolean;
 }) {
   return (

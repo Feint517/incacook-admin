@@ -3,7 +3,7 @@
 import { Drawer, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Truck, Store, MapPin, Calendar, Package, Wallet } from "lucide-react";
-import { formatEur, formatDateTimeFr } from "@/lib/utils";
+import { formatEurFromCents, formatDateTimeFr } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { useAdminQuery } from "@/lib/query";
 import {
@@ -11,7 +11,6 @@ import {
   OrderCategoryBadge,
   OrderStatusBadge,
   ORDER_STATUS_LABEL,
-  toEuros,
   type AdminOrder,
   type OrderStatus,
 } from "./order-model";
@@ -98,7 +97,7 @@ export function OrderDrawer({
             {order.orderNumber}
           </p>
           <DialogTitle className="mt-1 text-lg font-semibold text-on-surface">
-            Commande de {formatEur(toEuros(order.totalCents), { cents: true })}
+            Commande de {formatEurFromCents(order.totalCents)}
           </DialogTitle>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <OrderStatusBadge status={order.status} />
@@ -221,7 +220,7 @@ export function OrderDrawer({
                           <span className="ml-1 text-[10px] opacity-70">{e.status}</span>
                         </span>
                         <span className="tabular-nums">
-                          {formatEur(toEuros(e.amountCents), { cents: true })}
+                          {formatEurFromCents(e.amountCents)}
                         </span>
                       </li>
                     ))}
@@ -234,7 +233,7 @@ export function OrderDrawer({
             <div className="flex items-center justify-between rounded-md border border-outline-variant bg-surface-container-low p-3 text-[13px]">
               <span className="text-on-surface-variant">Total payé</span>
               <span className="font-semibold tabular-nums">
-                {formatEur(toEuros(order.totalCents), { cents: true })}
+                {formatEurFromCents(order.totalCents)}
               </span>
             </div>
           )}
@@ -263,7 +262,7 @@ function Money({
       </span>
       <span className={cn("tabular-nums", strong && "font-semibold", negative && "text-on-surface-variant")}>
         {negative ? "−" : ""}
-        {formatEur(toEuros(cents), { cents: true })}
+        {formatEurFromCents(cents)}
       </span>
     </div>
   );

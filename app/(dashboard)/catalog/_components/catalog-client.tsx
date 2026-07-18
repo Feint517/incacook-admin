@@ -14,7 +14,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDateTimeFr, formatEur } from "@/lib/utils";
+import { formatDateTimeFr, formatEurFromCents } from "@/lib/utils";
 import { ProductFormDialog } from "./product-form-dialog";
 import {
   orderStatusLabel,
@@ -98,7 +98,7 @@ function ProductsTab() {
       align: "right",
       cell: (p) => (
         <span className="font-mono text-[13px] text-on-surface">
-          {formatEur(p.priceCents, { cents: true })}
+          {formatEurFromCents(p.priceCents)}
         </span>
       ),
     },
@@ -286,7 +286,7 @@ function OrdersTab() {
       align: "right",
       cell: (o) => (
         <span className="font-mono text-[13px] text-on-surface">
-          {formatEur(o.totalCents, { cents: true })}
+          {formatEurFromCents(o.totalCents)}
         </span>
       ),
     },

@@ -55,3 +55,49 @@ export const WITHDRAWAL_STATUS_VARIANT: Record<
   PAID_OUT: "success",
   CANCELLED: "neutral",
 };
+
+// --- Withdrawal reconciliation (issue #7/#12) -------------------------------
+// GET /admin/withdrawals/reconcile — deliberately NOT a paginated list
+// endpoint (no hasMore/total/page), so the backend's TransformInterceptor
+// does not unwrap `items` the way it does for /admin/withdrawals — the
+// response body stays `{ items: [...] }` and must be unwrapped here.
+
+export type ReconcileIssue =
+  | "ok"
+  | "missing_transfer_id"
+  | "transfer_not_found"
+  | "amount_mismatch"
+  | "reversed_uncovered";
+
+export interface ReconcileItem {
+  withdrawalId: string;
+  userId: string;
+  ledgerAmountCents: number;
+  transferId: string | null;
+  issue: ReconcileIssue;
+  stripeAmountCents?: number;
+  amountReversedCents?: number;
+}
+
+export interface ReconcileResponse {
+  items: ReconcileItem[];
+}
+
+export const RECONCILE_ISSUE_LABEL: Record<ReconcileIssue, string> = {
+  ok: "OK",
+  missing_transfer_id: "ID transfert manquant",
+  transfer_not_found: "Transfert introuvable",
+  amount_mismatch: "Montant incohérent",
+  reversed_uncovered: "Remboursement non couvert",
+};
+
+export const RECONCILE_ISSUE_VARIANT: Record<
+  ReconcileIssue,
+  "success" | "warning" | "error" | "neutral"
+> = {
+  ok: "success",
+  missing_transfer_id: "warning",
+  transfer_not_found: "error",
+  amount_mismatch: "error",
+  reversed_uncovered: "warning",
+};
