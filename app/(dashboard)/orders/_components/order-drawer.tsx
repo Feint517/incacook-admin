@@ -28,7 +28,7 @@ interface WalletEntry {
  *  split used to render as a clean panel of independent numbers with no
  *  way to catch it. See IncaCook-Server's wallets.service.ts for the
  *  three checks this combines. */
-interface OrderFinancialsReconciliation {
+export interface OrderFinancialsReconciliation {
   isReconciled: boolean;
   pricingSplitDeltaCents: number;
   subtotalSplitDeltaCents: number;
@@ -258,15 +258,12 @@ export function OrderDrawer({
   );
 }
 
-/** Prominent, not silent (issue #21) — a broken split used to be
- *  indistinguishable from a correct one. Lists exactly which check(s)
- *  failed and the delta, so an admin doesn't have to do the arithmetic
- *  themselves to notice something's wrong. */
-function ReconciliationWarning({
-  reconciliation,
-}: {
-  reconciliation: OrderFinancialsReconciliation;
-}) {
+/**
+ * Pure — extracted from the component so it's unit-testable (issue #4)
+ * without a React/DOM test harness. Lists exactly which check(s) failed
+ * and the delta, in the order the server reports them.
+ */
+export function reconciliationProblems(reconciliation: OrderFinancialsReconciliation): string[] {
   const problems: string[] = [];
   if (reconciliation.pricingSplitDeltaCents !== 0) {
     problems.push(
@@ -291,6 +288,19 @@ function ReconciliationWarning({
       "Écritures d'annulation incohérentes : certaines lignes ont été annulées, d'autres non.",
     );
   }
+  return problems;
+}
+
+/** Prominent, not silent (issue #21) — a broken split used to be
+ *  indistinguishable from a correct one. Lists exactly which check(s)
+ *  failed and the delta, so an admin doesn't have to do the arithmetic
+ *  themselves to notice something's wrong. */
+function ReconciliationWarning({
+  reconciliation,
+}: {
+  reconciliation: OrderFinancialsReconciliation;
+}) {
+  const problems = reconciliationProblems(reconciliation);
 
   return (
     <div className="mb-3 rounded-md border border-error/30 bg-error/10 p-3 text-[13px] text-error">
