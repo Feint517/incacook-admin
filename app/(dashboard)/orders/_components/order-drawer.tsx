@@ -2,7 +2,7 @@
 
 import { Drawer, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Truck, Store, MapPin, Calendar, Package, Wallet } from "lucide-react";
+import { Truck, Store, MapPin, Calendar, Package, Wallet, AlertTriangle } from "lucide-react";
 import { formatEurFromCents, formatDateTimeFr } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { useAdminQuery } from "@/lib/query";
@@ -24,6 +24,17 @@ interface WalletEntry {
   withdrawalId: string | null;
   transferId: string | null;
 }
+/** Arithmetic cross-check (issue #21) — a broken commission/earnings/fee
+ *  split used to render as a clean panel of independent numbers with no
+ *  way to catch it. See IncaCook-Server's wallets.service.ts for the
+ *  three checks this combines. */
+export interface OrderFinancialsReconciliation {
+  isReconciled: boolean;
+  pricingSplitDeltaCents: number;
+  subtotalSplitDeltaCents: number;
+  ledgerBookingDeltaCents: number | null;
+  reversalInconsistent: boolean;
+}
 interface OrderFinancials {
   order: {
     id: string;
@@ -36,6 +47,7 @@ interface OrderFinancials {
     driverEarningsCents?: number | null;
   };
   walletEntries: WalletEntry[];
+  reconciliation: OrderFinancialsReconciliation;
 }
 
 /** Happy-path progression, in order. Rank drives which steps read as "done". */
@@ -197,6 +209,9 @@ export function OrderDrawer({
             <div className="h-24 animate-pulse rounded-md bg-surface-container-low" />
           ) : financials.data ? (
             <div className="rounded-md border border-outline-variant bg-surface-container-low p-3 text-[13px]">
+              {!financials.data.reconciliation.isReconciled && (
+                <ReconciliationWarning reconciliation={financials.data.reconciliation} />
+              )}
               <Money label="Sous-total" cents={financials.data.order.subtotalCents} />
               <Money label="Frais de livraison" cents={financials.data.order.fulfillmentFeeCents} />
               <Money label="Commission plateforme" cents={financials.data.order.commissionCents} negative />
@@ -240,6 +255,65 @@ export function OrderDrawer({
         </div>
       </div>
     </Drawer>
+  );
+}
+
+/**
+ * Pure — extracted from the component so it's unit-testable (issue #4)
+ * without a React/DOM test harness. Lists exactly which check(s) failed
+ * and the delta, in the order the server reports them.
+ */
+export function reconciliationProblems(reconciliation: OrderFinancialsReconciliation): string[] {
+  const problems: string[] = [];
+  if (reconciliation.pricingSplitDeltaCents !== 0) {
+    problems.push(
+      `Écart de répartition du prix : ${formatEurFromCents(reconciliation.pricingSplitDeltaCents)}`,
+    );
+  }
+  if (reconciliation.subtotalSplitDeltaCents !== 0) {
+    problems.push(
+      `Écart commission/revenu vendeur : ${formatEurFromCents(reconciliation.subtotalSplitDeltaCents)}`,
+    );
+  }
+  if (
+    reconciliation.ledgerBookingDeltaCents != null &&
+    reconciliation.ledgerBookingDeltaCents !== 0
+  ) {
+    problems.push(
+      `Écart portefeuille : ${formatEurFromCents(reconciliation.ledgerBookingDeltaCents)}`,
+    );
+  }
+  if (reconciliation.reversalInconsistent) {
+    problems.push(
+      "Écritures d'annulation incohérentes : certaines lignes ont été annulées, d'autres non.",
+    );
+  }
+  return problems;
+}
+
+/** Prominent, not silent (issue #21) — a broken split used to be
+ *  indistinguishable from a correct one. Lists exactly which check(s)
+ *  failed and the delta, so an admin doesn't have to do the arithmetic
+ *  themselves to notice something's wrong. */
+function ReconciliationWarning({
+  reconciliation,
+}: {
+  reconciliation: OrderFinancialsReconciliation;
+}) {
+  const problems = reconciliationProblems(reconciliation);
+
+  return (
+    <div className="mb-3 rounded-md border border-error/30 bg-error/10 p-3 text-[13px] text-error">
+      <div className="flex items-center gap-1.5 font-semibold">
+        <AlertTriangle className="h-3.5 w-3.5" />
+        Répartition non réconciliée
+      </div>
+      <ul className="mt-1.5 list-disc space-y-0.5 pl-4">
+        {problems.map((p, i) => (
+          <li key={i}>{p}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

@@ -7,7 +7,7 @@ on:
 
 jobs:
   quality-gates:
-    name: Typecheck, Lint, Build
+    name: Typecheck, Lint, Test, Build
     runs-on: ubuntu-latest
 
     steps:
@@ -33,6 +33,14 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Test
+        # See scripts/run-tests.mjs for why this isn't a plain `node --test`
+        # or a `find | xargs` one-liner — both have a silent-false-pass hole
+        # on zero matched files. Issue #4: this step never existed before,
+        # so lib/utils.test.ts's coverage claim was never actually
+        # CI-verified.
+        run: pnpm test
 
       - name: Build
         run: pnpm build
